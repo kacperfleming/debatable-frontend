@@ -1,14 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import DebateDemo from '../../components/DebateDemo';
+import DebateDemo from "../../components/DebateDemo";
+import classes from './Global.module.scss';
 
-type Props = {
+type Props = {};
 
-}
-
-const Global = (props:Props) => {
-
-    return (<DebateDemo />)
-}
+const Global = (props: Props) => {
+  return (
+    <div>
+      <DebateDemo />
+      <DebateDemo />
+    </div>
+  );
+};
 
 export default Global;

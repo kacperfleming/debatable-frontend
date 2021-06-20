@@ -9,21 +9,9 @@ type Props = {};
 const DebateDemo = (props: Props) => {
   return (
     <article className={classes.DebateDemo}>
-      <Badge badgeContent={2} color="primary">
-        <Tooltip title="Disgree">
-          <Fab color="secondary">
-            <ThumbDown />
-          </Fab>
-        </Tooltip>
-      </Badge>
+
       <TopicCard />
-      <Badge badgeContent={99} color="secondary">
-        <Tooltip title="Agree">
-          <Fab color="primary">
-            <ThumbUp />
-          </Fab>
-        </Tooltip>
-      </Badge>
+
     </article>
   );
 };

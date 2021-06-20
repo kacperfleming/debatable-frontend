@@ -1,0 +1,22 @@
+.MainMenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    padding: 0 10px;
+
+    .NavToggler {
+        @media (min-width: 500px) {
+            display: none;
+        }
+    }
+    .BrandBG {
+        background-color: rgb(247, 247, 247);
+    }
+
+    .Brand {
+        font-weight: bold;
+        font-size: 2rem;
+    }
+}

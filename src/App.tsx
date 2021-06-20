@@ -1,13 +1,14 @@
 import React from 'react';
 
+import Layout from './shared/Layout/Layout';
 import Global from './pages/Global/Global';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
+    <Layout>
       <Global />
-    </div>
+    </Layout>
   );
 }
 

@@ -1,0 +1,9 @@
+@import '../../styles/colors.scss';
+
+.UserPanel {
+    background-color: $ocean;
+    color: white;
+    max-width: 300px;
+    padding: 0 10px;
+    height: calc(100vh - 66px);
+}

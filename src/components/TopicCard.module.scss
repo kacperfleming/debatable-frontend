@@ -1,11 +1,24 @@
 .TopicCard {
-    display: grid;
-    padding: 10px;
-    width: 80%;
-    min-height: 300px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 10px;
+    max-width: 400px;
+    margin: 0 10px 0 15px;
+
+    .Topic {
+        margin-bottom: 1rem;
+    }
+    .Description {
+        margin-bottom: 1.5rem;
+    }
+    .Controls {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 50%;
+        min-width: 200px;
+    }
 }
 
-.Topic {
-    
-}
