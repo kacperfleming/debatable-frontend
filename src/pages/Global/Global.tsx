@@ -10,6 +10,10 @@ const Global = (props: Props) => {
     <div>
       <DebateDemo />
       <DebateDemo />
+      <DebateDemo />
+      <DebateDemo />
+      <DebateDemo />
+      <DebateDemo />
     </div>
   );
 };

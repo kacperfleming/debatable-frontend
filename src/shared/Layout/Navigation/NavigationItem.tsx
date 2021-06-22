@@ -1,19 +1,27 @@
 import { NavLink } from "react-router-dom";
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, Tooltip, Fab } from "@material-ui/core";
 
-import classes from './NavigationItem.module.scss';
+import classes from "./NavigationItem.module.scss";
 
 type Props = {
   to: string;
-  children: string
-  exact?: boolean
+  exact: boolean;
+  icon?: JSX.Element;
+  tooltip: string;
 };
 
 const NavigationItem = (props: Props) => {
   return (
-    <MenuItem component="li" className={classes.NavigationItem}>
-      <NavLink {...props} to={props.to} className={classes.Link} activeClassName={classes.Active}>{props.children}</NavLink>
-    </MenuItem>
+    <Tooltip title={props.tooltip}>
+      <NavLink
+        exact={props.exact}
+        to={props.to}
+        className={classes.Link}
+        activeClassName={classes.Active}
+      >
+        <Fab style={{color: 'inherit'}} size="small">{props.icon || props.tooltip}</Fab>
+      </NavLink>
+    </Tooltip>
   );
 };
 
