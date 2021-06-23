@@ -8,7 +8,7 @@ import {
   Typography,
   Divider,
 } from "@material-ui/core";
-import { Person, Forum, Star } from "@material-ui/icons";
+import { Person, Forum, Star, Settings } from "@material-ui/icons";
 
 import classes from "./UserPanel.module.scss";
 
@@ -31,6 +31,11 @@ const USER_PANEL_ITEM_LIST = [
     text: "Favorite Debates",
     to: "/favorite-debates/:uid",
     icon: <Star style={{ color: "black" }} />,
+  },
+  {
+    text: "Settings",
+    to: "/settings/:uid",
+    icon: <Settings style={{ color: "black" }} />,
   },
 ];
 

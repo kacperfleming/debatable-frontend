@@ -1,7 +1,7 @@
 import React from "react";
 import NavigationItem from "./NavigationItem";
-import { List, ListItemAvatar } from "@material-ui/core";
-import { Public, AddCircle, Fingerprint, VpnKey, ExitToApp } from "@material-ui/icons";
+import { List } from "@material-ui/core";
+import { Public, AddCircle, Forum, VpnKey, ExitToApp } from "@material-ui/icons";
 
 import classes from "./NavigationList.module.scss";
 
@@ -21,7 +21,7 @@ const NAVIGATION_LIST_ITEMS = [
   {
     to: '/my-debates',
     exact: false,
-    icon: <Fingerprint />,
+    icon: <Forum />,
     tooltip: 'My Debates'
   },
   {
