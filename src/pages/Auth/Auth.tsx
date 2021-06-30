@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
-import useForm from "../../shared/hooks/use-form";
-import useHttp from "../../shared/hooks/use-http";
 import { Paper, Typography, Button, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+
+import useForm from "../../shared/hooks/use-form";
+import useHttp from "../../shared/hooks/use-http";
+import Form from '../../shared/UIElements/Form';
 
 const useStyles = makeStyles({
   headline: {
@@ -39,7 +41,102 @@ const Auth = (props: props) => {
   const { sendRequest, error, isLoading } = useHttp();
   const [isLoggingIn, setIsLoggingIn] = useState(true);
 
-    const onChangeModeHandler = () => setIsLoggingIn(prevState => !prevState);
+    const onChangeModeHandler = () => {
+      setIsLoggingIn(prevState => {
+        
+        if(!prevState) {
+          setData({
+              email: {
+                  elementType: "input",
+                  inputType: "email",
+                  value: "",
+                  label: "email",
+                  isValid: false,
+                  required: true,
+                  warning: "",
+                  validatiors: {
+                    isEmail: true,
+                    minLength: 8,
+                    maxLength: 64,
+                  },
+                },
+                password: {
+                  elementType: "input",
+                  inputType: "password",
+                  value: "",
+                  label: "password",
+                  isValid: false,
+                  required: true,
+                  warning: "",
+                  validatiors: {
+                    minLength: 8,
+                    maxLength: 24,
+                  },
+                },
+              });
+      } else {
+            setData({
+              email: {
+                  elementType: "input",
+                  inputType: "email",
+                  value: "",
+                  label: "email",
+                  isValid: false,
+                  required: true,
+                  warning: "",
+                  validatiors: {
+                    isEmail: true,
+                    minLength: 8,
+                    maxLength: 64,
+                  },
+                },
+                userName: {
+                  elementType: "input",
+                  inputType: "text",
+                  value: "",
+                  label: "name",
+                  isValid: false,
+                  required: true,
+                  warning: "",
+                  validatiors: {
+                    minLength: 4,
+                    maxLength: 24,
+                  },
+                },
+                password: {
+                  elementType: "input",
+                  inputType: "password",
+                  value: "",
+                  label: "password",
+                  isValid: false,
+                  required: true,
+                  warning: "",
+                  validatiors: {
+                    isPassword: true,
+                    minLength: 8,
+                    maxLength: 24,
+                  },
+                },
+                confirmPassword: {
+                  elementType: "input",
+                  inputType: "password",
+                  value: "",
+                  label: "confirm password",
+                  isValid: false,
+                  required: true,
+                  warning: "",
+                  validatiors: {
+                    isPassword: true,
+                    minLength: 8,
+                    maxLength: 24,
+                  },
+                },
+            })
+        }
+
+        return !prevState
+      })
+    };
 
   const onSubmitHandler = () => {
     if(isLoggingIn) {
@@ -51,7 +148,7 @@ const Auth = (props: props) => {
             
         });
     } else {
-        sendRequest('http://localhost:5000/users/login', 'POST', {
+        sendRequest('http://localhost:5000/users/signup', 'POST', {
             email: formState.inputs.email.value,
             userName: formState.inputs.firstName.value,
             password: formState.inputs.password.value,
@@ -63,102 +160,10 @@ const Auth = (props: props) => {
     }
   }
 
-//   if(isLoggingIn) {
-//     setData({
-//         email: {
-//             elementType: "input",
-//             inputType: "email",
-//             value: "",
-//             label: "email",
-//             isValid: false,
-//             required: true,
-//             warning: "",
-//             validatiors: {
-//               isEmail: true,
-//               minLength: 8,
-//               maxLength: 64,
-//             },
-//           },
-//           password: {
-//             elementType: "input",
-//             inputType: "passoword",
-//             value: "",
-//             label: "passoword",
-//             isValid: false,
-//             required: true,
-//             warning: "",
-//             validatiors: {
-//               minLength: 8,
-//               maxLength: 24,
-//             },
-//           },
-//         });
-// } else {
-//       setData({
-//         email: {
-//             elementType: "input",
-//             inputType: "email",
-//             value: "",
-//             label: "email",
-//             isValid: false,
-//             required: true,
-//             warning: "",
-//             validatiors: {
-//               isEmail: true,
-//               minLength: 8,
-//               maxLength: 64,
-//             },
-//           },
-//           userName: {
-//             elementType: "input",
-//             inputType: "text",
-//             value: "",
-//             label: "name",
-//             isValid: false,
-//             required: true,
-//             warning: "",
-//             validatiors: {
-//               minLength: 4,
-//               maxLength: 24,
-//             },
-//           },
-//           password: {
-//             elementType: "input",
-//             inputType: "password",
-//             value: "",
-//             label: "password",
-//             isValid: false,
-//             required: true,
-//             warning: "",
-//             validatiors: {
-//               isPassword: true,
-//               minLength: 8,
-//               maxLength: 24,
-//             },
-//           },
-//           confirmPassword: {
-//             elementType: "input",
-//             inputType: "password",
-//             value: "",
-//             label: "password",
-//             isValid: false,
-//             required: true,
-//             warning: "",
-//             validatiors: {
-//               isPassword: true,
-//               minLength: 8,
-//               maxLength: 24,
-//             },
-//           },
-//       })
-//   }
+
 
   return (
-    <React.Fragment>
-      <Paper>
-        <Typography className={classes.headline} variant="h4" component="h1">
-          {isLoggingIn ? 'Log in' : 'Sign up'}
-        </Typography>
+      <Form headline={isLoggingIn ? 'Log in' : 'Sign up'} onSubmit={onSubmitHandler} additives={
         <Typography component="div">
         <Grid className={classes.switchGrid} component="label" container alignItems="center" spacing={1}>
           <Grid item>Sing up</Grid>
@@ -168,13 +173,9 @@ const Auth = (props: props) => {
           <Grid item>Log in</Grid>
         </Grid>
       </Typography>
-        <form className={classes.form}>
-            {displayForm}
-            <Button variant="contained" color="primary" onClick={onSubmitHandler}>{isLoggingIn ? 'Log in' : 'Sign up'}</Button>
-        </form>
-
-      </Paper>
-    </React.Fragment>
+      }>
+        {displayForm}
+      </Form>
   );
 };
 
