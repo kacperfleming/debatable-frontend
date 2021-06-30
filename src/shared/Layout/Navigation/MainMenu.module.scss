@@ -3,7 +3,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    height: 50px;
+    height: 64px;
     padding: 0 10px;
 
     .NavToggler {
@@ -11,6 +11,11 @@
             display: none;
         }
     }
+
+    .buttonsGroup {
+        display: flex;
+    }
+    
     .BrandBG {
         background-color: rgb(247, 247, 247);
     }

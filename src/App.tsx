@@ -5,6 +5,7 @@ import Layout from "./shared/Layout/Layout";
 import NewDebate from "./pages/NewDebate/NewDebate";
 import Global from "./pages/Global/Global";
 import Auth from "./pages/Auth/Auth";
+import Logout from './components/Logout';
 import "./App.css";
 
 function App() {
@@ -15,6 +16,9 @@ function App() {
       </Route>
       <Route path="/auth">
         <Auth />
+      </Route>
+      <Route path="/logout">
+        <Logout />
       </Route>
       <Route path="/" exact>
         <Global />

@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
-import { Paper, Typography, Button, Switch, Grid } from "@material-ui/core";
+import { Typography, Button, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import {useDispatch} from 'react-redux';
 
+import {authActions} from '../../store/authSlice';
 import useForm from "../../shared/hooks/use-form";
 import useHttp from "../../shared/hooks/use-http";
 import Form from '../../shared/UIElements/Form';
@@ -36,6 +38,8 @@ type props = {};
 
 const Auth = (props: props) => {
   const classes = useStyles();
+
+  const dispatch = useDispatch();
 
   const { formState, displayForm, setData } = useForm();
   const { sendRequest, error, isLoading } = useHttp();
@@ -145,7 +149,7 @@ const Auth = (props: props) => {
             password: formState.inputs.password.value,
         })
         .then(response => {
-            
+            dispatch(authActions.login(response?.data.token));
         });
     } else {
         sendRequest('http://localhost:5000/users/signup', 'POST', {
@@ -160,13 +164,11 @@ const Auth = (props: props) => {
     }
   }
 
-
-
   return (
       <Form headline={isLoggingIn ? 'Log in' : 'Sign up'} onSubmit={onSubmitHandler} additives={
         <Typography component="div">
         <Grid className={classes.switchGrid} component="label" container alignItems="center" spacing={1}>
-          <Grid item>Sing up</Grid>
+          <Grid item>Sign up</Grid>
           <Grid item>
             <Switch checked={isLoggingIn} onChange={onChangeModeHandler} name="checkedC" />
           </Grid>
