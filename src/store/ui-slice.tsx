@@ -1,7 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    error: null,
+    notification: {
+        message: null,
+        type: null,
+        timer: 5000
+    },
     isLoading: false
 }
 
@@ -12,9 +16,12 @@ const UISlice = createSlice({
         setLoading(state, action) {
             state.isLoading = action.payload
         },
-        setError(state, action) {
-            state.error = action.payload,
-            state.isLoading = false
+        setNotification(state, action) {
+            state.notification = {
+                message: action.payload.message,
+                type: action.payload.type,
+                timer: action.payload?.timer
+            }
         }
     }
 });

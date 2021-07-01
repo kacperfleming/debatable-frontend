@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px 10px;
-    margin: 0 10px 0 15px;
     width: 100%;
 
     .Topic {
@@ -11,14 +9,6 @@
     }
     .Description {
         margin-bottom: 1.5rem;
-    }
-    .Controls {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        width: 50%;
-        min-width: 200px;
     }
 }
 

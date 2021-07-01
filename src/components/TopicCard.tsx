@@ -1,20 +1,15 @@
-import { useState } from "react";
-import { Paper, Typography, Fab, Badge, Tooltip } from "@material-ui/core";
-import { ExpandMore, ExpandLess, ThumbUp, ThumbDown } from "@material-ui/icons";
+import { Paper, Typography} from "@material-ui/core";
 
 import Author from "./Author";
 import classes from "./TopicCard.module.scss";
 
-type Props = {};
+type Props = {
+  showDescription: boolean;
+};
 
 const TopicCard = (props: Props) => {
-  const [showDescription, setShowDescription] = useState(false);
-
-  const onHandleDescription = () =>
-    setShowDescription((prevState) => !prevState);
-
   return (
-    <Paper component="section" className={classes.TopicCard}>
+    <Paper component="section" elevation={0} className={classes.TopicCard}>
       <Author
         name="Jan Kowalski"
         image="https://images.pexels.com/photos/1680172/pexels-ph….jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
@@ -23,35 +18,11 @@ const TopicCard = (props: Props) => {
       <Typography className={classes.Topic} variant="h5" component="h2">
         Sztuczna inteligencja odmieni życie ludzi na zawsze.
       </Typography>
-      {showDescription ? (
+      {props.showDescription ? (
         <Typography className={classes.Description} component="p">
           This is example description of statement above.
         </Typography>
       ) : null}
-      <section className={classes.Controls}>
-        <Badge badgeContent={2} color="primary">
-          <Tooltip title="Disagree">
-            <Fab size="small" color="secondary">
-              <ThumbDown />
-            </Fab>
-          </Tooltip>
-        </Badge>
-        <Tooltip
-          onClick={onHandleDescription}
-          title={showDescription ? "Less" : "More"}
-        >
-          <Fab size="small">
-            {showDescription ? <ExpandLess /> : <ExpandMore />}
-          </Fab>
-        </Tooltip>
-        <Badge badgeContent={99} color="secondary">
-          <Tooltip title="Agree">
-            <Fab size="small" color="primary">
-              <ThumbUp />
-            </Fab>
-          </Tooltip>
-        </Badge>
-      </section>
     </Paper>
   );
 };

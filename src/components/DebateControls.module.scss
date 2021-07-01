@@ -1,0 +1,13 @@
+.Controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+    min-width: 250px;
+}
+
+.Dense {
+    width: 50%;
+}

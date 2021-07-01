@@ -51,48 +51,28 @@ const Auth = (props: props) => {
         if(!prevState) {
           setData({
               email: {
-                  elementType: "input",
-                  inputType: "email",
-                  value: "",
-                  label: "email",
+                  ...formState.inputs.email,
+                  value: formState.inputs.email.value || '',
                   isValid: false,
-                  required: true,
                   warning: "",
-                  validatiors: {
-                    isEmail: true,
-                    minLength: 8,
-                    maxLength: 64,
-                  },
                 },
                 password: {
-                  elementType: "input",
-                  inputType: "password",
+                  ...formState.inputs.password,
                   value: "",
-                  label: "password",
                   isValid: false,
-                  required: true,
                   warning: "",
-                  validatiors: {
-                    minLength: 8,
-                    maxLength: 24,
-                  },
                 },
               });
       } else {
             setData({
+              avatar: {
+                elementType: 'filepicker'
+              },
               email: {
-                  elementType: "input",
-                  inputType: "email",
-                  value: "",
-                  label: "email",
+                  ...formState.inputs.email,
+                  value: formState.inputs.email.value || '',
                   isValid: false,
-                  required: true,
                   warning: "",
-                  validatiors: {
-                    isEmail: true,
-                    minLength: 8,
-                    maxLength: 64,
-                  },
                 },
                 userName: {
                   elementType: "input",
@@ -108,18 +88,10 @@ const Auth = (props: props) => {
                   },
                 },
                 password: {
-                  elementType: "input",
-                  inputType: "password",
+                  ...formState.inputs.password,
                   value: "",
-                  label: "password",
                   isValid: false,
-                  required: true,
                   warning: "",
-                  validatiors: {
-                    isPassword: true,
-                    minLength: 8,
-                    maxLength: 24,
-                  },
                 },
                 confirmPassword: {
                   elementType: "input",
@@ -154,12 +126,12 @@ const Auth = (props: props) => {
     } else {
         sendRequest('http://localhost:5000/users/signup', 'POST', {
             email: formState.inputs.email.value,
-            userName: formState.inputs.firstName.value,
+            userName: formState.inputs.userName.value,
             password: formState.inputs.password.value,
             confirmPassowrd: formState.inputs.confirmPassword.value
         })
         .then(response => {
-            
+            onChangeModeHandler();
         });
     }
   }

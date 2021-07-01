@@ -1,7 +1,9 @@
 .DebateDemo {
+
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     margin-bottom: 1rem;
-    width: 100%;;
+    width: 100%;
+    padding: 20px 10px;
 }

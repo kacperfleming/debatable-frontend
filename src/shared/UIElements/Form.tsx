@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     padding: "0 10px",
     width: "90%",
     maxWidth: 400,
-    margin: "0 auto 100px",
+    margin: "0 auto",
 
     "& > *": {
       marginBottom: "0.5rem",

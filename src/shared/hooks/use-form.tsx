@@ -1,5 +1,8 @@
-import { ChangeEvent, useReducer, useCallback } from "react";
-import { TextField } from "@material-ui/core";
+import { ChangeEvent, useReducer, useCallback, useRef } from "react";
+import { TextField, Tooltip, Fab } from "@material-ui/core";
+import { Face } from "@material-ui/icons";
+
+import ValidateInput from "../utils/ValidateInput";
 
 const DEFAULT_INPUTS = {
   email: {
@@ -34,25 +37,50 @@ const DEFAULT_INPUTS = {
 type action = {
   type: "SET_DATA" | "CHANGE_VALUE" | "VALIDATE_INPUT";
   data?: object;
+  id?: any;
+  val?: string | number;
+  warning?: string;
 };
 
-const formReducer = (state: object, action: action) => {
+const formReducer = (state: any, action: action) => {
   switch (action.type) {
     case "SET_DATA":
       return {
         ...state,
-        inputs: { ...action.data },
+        inputs: {
+          ...action.data,
+        },
       };
     case "CHANGE_VALUE":
-      return state;
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.id]: {
+            ...state.inputs[action.id],
+            value: action.val,
+          },
+        },
+      };
     case "VALIDATE_INPUT":
-      return state;
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.id]: {
+            ...state.inputs[action.id],
+            warning: action.warning,
+          },
+        },
+      };
     default:
       return state;
   }
 };
 
 const useForm = (inputs: object = DEFAULT_INPUTS) => {
+  const filePickerRef = useRef<HTMLInputElement>(null);
+
   const [formState, dispatch]: [any, any] = useReducer(formReducer, {
     inputs: { ...inputs },
     isValid: false,
@@ -63,10 +91,35 @@ const useForm = (inputs: object = DEFAULT_INPUTS) => {
       event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       id: string
     ) => {
-      dispatch({ type: "CHANGE_VALUE", val: event.target.value });
+      dispatch({ type: "CHANGE_VALUE", val: event.target.value, id });
     },
-    []
+    [dispatch]
   );
+
+  const onCheckValidity = useCallback(
+    (
+      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      id: string,
+      validators: object
+    ) => {
+      dispatch({
+        type: "VALIDATE_INPUT",
+        warning: ValidateInput(event.target.value, validators),
+        id,
+      });
+    },
+    [ValidateInput, dispatch]
+  );
+
+  const onPickFileHandler = () => {
+      filePickerRef!.current!.click();
+  };
+
+  const pickedHandler = (event:ChangeEvent<HTMLInputElement>, id:any) => {
+    if(event.target.files && event.target.files.length === 1) {
+      dispatch({type: 'CHANGE_VALUE', val: event.target.value, id})
+  }
+}
 
   const setData = useCallback((data: object) => {
     dispatch({ type: "SET_DATA", data });
@@ -80,18 +133,33 @@ const useForm = (inputs: object = DEFAULT_INPUTS) => {
     });
   }
 
-  const displayForm = inputsArr.map((el) => (
-    <TextField
-      key={el.id}
-      onChange={(event) => onChangeHandler(event, el.id)}
-      type={el.input.inputType}
-      variant="outlined"
-      required={el.input.required}
-      label={el.input.label}
-      error={!!el.input.warning}
-      helperText={el.input.warning}
-    />
-  ));
+  const displayForm = inputsArr.map((el) =>
+    el.input.elementType === "filepicker" ? (
+      <Tooltip style={{margin: '10px auto'}} title="Add Profile Image">
+        <Fab onClick={onPickFileHandler} size="medium" color="primary">
+          <Face />
+          <input ref={filePickerRef} onChange={(event) => pickedHandler(event, el.id)} type="file" hidden accept=".jpg,.png,.jpeg" />
+        </Fab>
+      </Tooltip>
+    ) : (
+      <TextField
+        key={el.id}
+        onChange={(event) => onChangeHandler(event, el.id)}
+        onBlur={(event) => onCheckValidity(event, el.id, el.input.validatiors)}
+        multiline={el.input.elementType === "textarea" ? true : false}
+        rows={el.input.rows ? el.input.rows : undefined}
+        rowsMax={el.input.rowsMax ? el.input.rowsMax : undefined}
+        type={el.input.inputType ? el.input.inputType : undefined}
+        select={el.input.inputType === "select" ? true : false}
+        value={el.input.value}
+        variant="outlined"
+        required={el.input.required}
+        label={el.input.label}
+        error={!!el.input.warning}
+        helperText={el.input.warning}
+      />
+    )
+  );
 
   return { formState, displayForm, setData };
 };

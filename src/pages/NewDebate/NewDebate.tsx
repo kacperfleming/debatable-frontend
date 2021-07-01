@@ -28,8 +28,9 @@ const NewDebate = (props: props) => {
         },
       },
       description: {
-        elementType: "input",
-        inputType: "text",
+        elementType: "textarea",
+        rows: 8,
+        rowsMax: 8,
         value: "",
         label: "description",
         isValid: false,

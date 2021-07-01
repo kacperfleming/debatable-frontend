@@ -62,8 +62,8 @@ const ReputationRankPanel = (props: Props) => {
     <Box className={classes.ReputationRankPanel} component="section">
       <List className={classes.List}>
         {USER_PANEL_RANK_ITEMS.map((user) => (
-          <Link className={classes.Link} to={`/users/${user.userId}`}>
-            <ListItem className={classes.ListItem} key={user.userId}>
+          <Link key={user.userId} className={classes.Link} to={`/users/${user.userId}`}>
+            <ListItem className={classes.ListItem}>
               <Author
                 name={user.name}
                 image={user.image}
