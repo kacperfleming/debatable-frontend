@@ -1,6 +1,6 @@
-import { ChangeEvent, useReducer, useCallback, useRef } from "react";
-import { TextField, Tooltip, Fab } from "@material-ui/core";
-import { Face } from "@material-ui/icons";
+import { ChangeEvent, useReducer, useCallback, useRef, Fragment } from "react";
+import { TextField, Tooltip, Fab, Button } from "@material-ui/core";
+import { Face, Check } from "@material-ui/icons";
 
 import ValidateInput from "../utils/ValidateInput";
 
@@ -35,10 +35,10 @@ const DEFAULT_INPUTS = {
 };
 
 type action = {
-  type: "SET_DATA" | "CHANGE_VALUE" | "VALIDATE_INPUT";
+  type: "SET_DATA" | "CHANGE_VALUE" | "VALIDATE_INPUT" | "SET_FORM_VALIDITY";
   data?: object;
   id?: any;
-  val?: string | number;
+  val?: string | number | boolean;
   warning?: string;
 };
 
@@ -73,17 +73,22 @@ const formReducer = (state: any, action: action) => {
           },
         },
       };
+    case "SET_FORM_VALIDITY":
+      return {
+        ...state,
+        formIsValid: action.val
+      }
     default:
       return state;
   }
 };
 
-const useForm = (inputs: object = DEFAULT_INPUTS) => {
+const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, buttonText?:string, buttonStyles?:string) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
 
   const [formState, dispatch]: [any, any] = useReducer(formReducer, {
     inputs: { ...inputs },
-    isValid: false,
+    formIsValid: false,
   });
 
   const onChangeHandler = useCallback(
@@ -117,8 +122,25 @@ const useForm = (inputs: object = DEFAULT_INPUTS) => {
 
   const pickedHandler = (event:ChangeEvent<HTMLInputElement>, id:any) => {
     if(event.target.files && event.target.files.length === 1) {
-      dispatch({type: 'CHANGE_VALUE', val: event.target.value, id})
+      dispatch({type: 'CHANGE_VALUE', val: event.target.value, id});
+      setData({
+        ...formState.inputs,
+        [id]: {
+          ...formState.inputs[id],
+          isValid: true
+        }
+      });
+      return;
+  } else {
+    setData({
+      ...formState.inputs,
+      [id]: {
+        ...formState.inputs[id],
+        isValid: false
+      }
+    });
   }
+
 }
 
   const setData = useCallback((data: object) => {
@@ -133,11 +155,26 @@ const useForm = (inputs: object = DEFAULT_INPUTS) => {
     });
   }
 
-  const displayForm = inputsArr.map((el) =>
+  const onSubmitForm = () => {
+    for(let input in formState.inputs) {
+      if(!formState.inputs[input].required && !formState.inputs[input].value) {
+        continue;
+      } else if(formState.inputs[input].warning) {
+        console.log(`${input}: ${!!formState.inputs[input].warning}`);
+        dispatch({type: "SET_FORM_VALIDITY", val: false});
+        return;
+      }
+    }
+    dispatch({type: "SET_FORM_VALIDITY", val: true});
+    console.log("FORM IS VALID");
+    onSubmitHandler();
+  }
+
+  const mappedInputs = inputsArr.map((el) =>
     el.input.elementType === "filepicker" ? (
-      <Tooltip style={{margin: '10px auto'}} title="Add Profile Image">
+      <Tooltip key={el.id} style={{margin: '10px auto', backgroundColor: el.input.isValid ? 'green' : ''}} title={el.input.isValid ? "File Added Successfully" : "Add Profile Image"}>
         <Fab onClick={onPickFileHandler} size="medium" color="primary">
-          <Face />
+          {el.input.isValid ? <Check /> : <Face />}
           <input ref={filePickerRef} onChange={(event) => pickedHandler(event, el.id)} type="file" hidden accept=".jpg,.png,.jpeg" />
         </Fab>
       </Tooltip>
@@ -160,6 +197,13 @@ const useForm = (inputs: object = DEFAULT_INPUTS) => {
       />
     )
   );
+
+  const displayForm = (
+    <Fragment>
+      {mappedInputs}
+      <Button className={buttonStyles} variant="contained" color="primary" onClick={onSubmitForm}>{buttonText || 'Submit'}</Button>
+    </Fragment>
+  )
 
   return { formState, displayForm, setData };
 };

@@ -41,7 +41,7 @@ const Auth = (props: props) => {
 
   const dispatch = useDispatch();
 
-  const { formState, displayForm, setData } = useForm();
+  const { formState, displayForm, setData } = useForm(onSubmitHandler);
   const { sendRequest, error, isLoading } = useHttp();
   const [isLoggingIn, setIsLoggingIn] = useState(true);
 
@@ -53,25 +53,23 @@ const Auth = (props: props) => {
               email: {
                   ...formState.inputs.email,
                   value: formState.inputs.email.value || '',
-                  isValid: false,
                   warning: "",
                 },
                 password: {
                   ...formState.inputs.password,
                   value: "",
-                  isValid: false,
                   warning: "",
                 },
               });
       } else {
             setData({
               avatar: {
-                elementType: 'filepicker'
+                elementType: 'filepicker',
+                value: null,
               },
               email: {
                   ...formState.inputs.email,
                   value: formState.inputs.email.value || '',
-                  isValid: false,
                   warning: "",
                 },
                 userName: {
@@ -79,7 +77,6 @@ const Auth = (props: props) => {
                   inputType: "text",
                   value: "",
                   label: "name",
-                  isValid: false,
                   required: true,
                   warning: "",
                   validatiors: {
@@ -90,22 +87,7 @@ const Auth = (props: props) => {
                 password: {
                   ...formState.inputs.password,
                   value: "",
-                  isValid: false,
                   warning: "",
-                },
-                confirmPassword: {
-                  elementType: "input",
-                  inputType: "password",
-                  value: "",
-                  label: "confirm password",
-                  isValid: false,
-                  required: true,
-                  warning: "",
-                  validatiors: {
-                    isPassword: true,
-                    minLength: 8,
-                    maxLength: 24,
-                  },
                 },
             })
         }
@@ -114,7 +96,7 @@ const Auth = (props: props) => {
       })
     };
 
-  const onSubmitHandler = () => {
+  function onSubmitHandler() {
     if(isLoggingIn) {
         sendRequest('http://localhost:5000/users/login', 'POST', {
             email: formState.inputs.email.value,
@@ -128,7 +110,6 @@ const Auth = (props: props) => {
             email: formState.inputs.email.value,
             userName: formState.inputs.userName.value,
             password: formState.inputs.password.value,
-            confirmPassowrd: formState.inputs.confirmPassword.value
         })
         .then(response => {
             onChangeModeHandler();

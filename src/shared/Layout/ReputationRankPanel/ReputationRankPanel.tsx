@@ -55,6 +55,34 @@ const USER_PANEL_RANK_ITEMS = [
     image:
       "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   },
+  {
+    userId: 7,
+    name: "Jan Kowalski",
+    reputationPoints: 1234,
+    image:
+      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  },
+  {
+    userId: 8,
+    name: "Jan Kowalski",
+    reputationPoints: 1234,
+    image:
+      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  },
+  {
+    userId: 9,
+    name: "Jan Kowalski",
+    reputationPoints: 1234,
+    image:
+      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  },
+  {
+    userId: 10,
+    name: "Jan Kowalski",
+    reputationPoints: 1234,
+    image:
+      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  },
 ];
 
 const ReputationRankPanel = (props: Props) => {

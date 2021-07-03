@@ -51,7 +51,6 @@ const Form = (props: props) => {
         {props.additives}
         <form className={classes.form}>
             {props.children}
-            <Button className={props.buttonStyles} variant="contained" color="primary" onClick={props.onSubmit}>{props.buttonText || 'Submit'}</Button>
         </form>
 
       </Paper>

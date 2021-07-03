@@ -10,7 +10,7 @@ type props = {};
 
 const NewDebate = (props: props) => {
   const { sendRequest, error, isLoading } = useHttp();
-  const { formState, displayForm, setData } = useForm();
+  const { formState, displayForm, setData } = useForm(onSubmitHandler);
 
   useEffect(() => {
     setData({
@@ -19,7 +19,6 @@ const NewDebate = (props: props) => {
         inputType: "text",
         value: "",
         label: "title",
-        isValid: false,
         required: true,
         warning: "",
         validatiors: {
@@ -33,7 +32,6 @@ const NewDebate = (props: props) => {
         rowsMax: 8,
         value: "",
         label: "description",
-        isValid: false,
         required: false,
         warning: "",
         validatiors: {
@@ -43,7 +41,7 @@ const NewDebate = (props: props) => {
     });
   }, []);
 
-  const onSubmitHandler = () => {
+  function onSubmitHandler () {
     sendRequest('http://localhost:5000/debates', 'POST', {
       title: formState.inputs.title.value,
       description: formState.inputs.description.value,
