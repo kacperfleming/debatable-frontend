@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useCallback} from 'react';
 import axios from 'axios';
 
 type method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
@@ -7,12 +7,13 @@ const useHttp = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const sendRequest = (url:string, method:method, data?:object) => {
+    const sendRequest = useCallback((url:string, method:method, data?:object, headers?:object) => {
         setIsLoading(true);
         return axios({
             method: method,
             url: url,
-            data: data
+            data: data,
+            headers: headers
         })
         .then(response => {
             setError(null);
@@ -25,7 +26,7 @@ const useHttp = () => {
             setIsLoading(false);
             setError(err);
         });
-    }
+    }, [axios]);
 
     return {
         sendRequest,

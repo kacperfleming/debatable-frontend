@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import { Typography, Button, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {useDispatch} from 'react-redux';
@@ -65,6 +65,7 @@ const Auth = (props: props) => {
             setData({
               avatar: {
                 elementType: 'filepicker',
+                isValid: false,
                 value: null,
               },
               email: {
@@ -98,20 +99,28 @@ const Auth = (props: props) => {
 
   function onSubmitHandler() {
     if(isLoggingIn) {
-        sendRequest('http://localhost:5000/users/login', 'POST', {
+        sendRequest('http://localhost:5000/api/users/login', 'POST', {
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
         })
         .then(response => {
-            dispatch(authActions.login(response?.data.token));
+          const {token, userId} = response?.data;
+          localStorage.setItem('jwt', token);
+          localStorage.setItem('userId', userId);
+          dispatch(authActions.login({token, userId}));
         });
     } else {
-        sendRequest('http://localhost:5000/users/signup', 'POST', {
-            email: formState.inputs.email.value,
-            userName: formState.inputs.userName.value,
-            password: formState.inputs.password.value,
-        })
+      console.log(formState.inputs.avatar.value);
+      const formData = new FormData();
+      formData.append('email', formState.inputs.email.value);
+      formData.append('username', formState.inputs.userName.value);
+      formData.append('password', formState.inputs.password.value);
+      formData.append('avatar', formState.inputs.avatar.value);
+
+        sendRequest('http://localhost:5000/api/users/signup', 'POST', formData,
+        )
         .then(response => {
+          console.log(response);
             onChangeModeHandler();
         });
     }

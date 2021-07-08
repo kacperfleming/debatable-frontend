@@ -14,11 +14,16 @@ type props = {
   handleDescription: () => void;
   showDescription: boolean;
   authorMode?: boolean;
+  hasDescription: boolean;
 };
 
 const DebateControls = (props: props) => {
   return (
-    <section className={`${classes.Controls} ${!props.authorMode ? classes.Dense : ''}`}>
+    <section
+      className={`${classes.Controls} ${
+        !props.authorMode ? classes.Dense : ""
+      }`}
+    >
       {props.authorMode ? (
         <Tooltip title="Delete">
           <Fab size="small">
@@ -34,14 +39,16 @@ const DebateControls = (props: props) => {
           </Fab>
         </Tooltip>
       </Badge>
-      <Tooltip
-        onClick={props.handleDescription}
-        title={props.showDescription ? "Less" : "More"}
-      >
-        <Fab size="small">
-          {props.showDescription ? <ExpandLess /> : <ExpandMore />}
-        </Fab>
-      </Tooltip>
+      {props.hasDescription ? (
+        <Tooltip
+          onClick={props.handleDescription}
+          title={props.showDescription ? "Less" : "More"}
+        >
+          <Fab size="small">
+            {props.showDescription ? <ExpandLess /> : <ExpandMore />}
+          </Fab>
+        </Tooltip>
+      ) : null}
       <Badge badgeContent={99} color="secondary">
         <Tooltip title="Agree">
           <Fab size="small" color="primary">

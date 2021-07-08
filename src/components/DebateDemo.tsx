@@ -5,7 +5,14 @@ import TopicCard from "./TopicCard";
 import DebateControls from './DebateControls';
 import classes from "./DebateDemo.module.scss";
 
-type Props = {};
+type Props = {
+  title: string;
+  description?: string;
+  author: string;
+  authorId: string;
+  avatar: string;
+  creationDate: string;
+};
 
 const DebateDemo = (props: Props) => {
   const [showDescription, setShowDescription] = useState(false);
@@ -13,11 +20,13 @@ const DebateDemo = (props: Props) => {
   const onHandleDescription = () =>
     setShowDescription((prevState) => !prevState);
 
+    console.log(props.avatar);
+
   return (
     <Paper component="article" className={classes.DebateDemo}>
 
-      <TopicCard showDescription={showDescription} />
-      <DebateControls showDescription={showDescription} handleDescription={onHandleDescription} />
+      <TopicCard {...props} showDescription={showDescription} />
+      <DebateControls hasDescription={!!props.description} showDescription={showDescription} handleDescription={onHandleDescription} />
 
     </Paper>
   );

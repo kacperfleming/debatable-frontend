@@ -1,14 +1,24 @@
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
+import { CircularProgress } from "@material-ui/core";
 
+import { useSelector } from "react-redux";
 import useForm from "../../shared/hooks/use-form";
 import useHttp from "../../shared/hooks/use-http";
-import Form from '../../shared/UIElements/Form';
-
-
+import Form from "../../shared/UIElements/Form";
 
 type props = {};
 
+type auth = {
+  token?: string;
+};
+
+interface reduxState {
+  auth: auth;
+}
+
 const NewDebate = (props: props) => {
+  const token = useSelector((state: reduxState) => state.auth.token);
+
   const { sendRequest, error, isLoading } = useHttp();
   const { formState, displayForm, setData } = useForm(onSubmitHandler);
 
@@ -41,23 +51,28 @@ const NewDebate = (props: props) => {
     });
   }, []);
 
-  function onSubmitHandler () {
-    sendRequest('http://localhost:5000/debates', 'POST', {
-      title: formState.inputs.title.value,
-      description: formState.inputs.description.value,
-    })
-    .then(response => {
-
-    })
-    .catch(err => {
-      
-    });
+  function onSubmitHandler() {
+    console.log(token);
+    sendRequest(
+      "http://localhost:5000/api/debates",
+      "POST",
+      {
+        title: formState.inputs.title.value,
+        description: formState.inputs.description.value,
+      },
+      {
+        "Authorization": `Bearer ${token}`,
+      }
+    ).then((response) => {});
   }
 
   return (
-    <Form headline="New Debate" onSubmit={onSubmitHandler}>
+    <Fragment>
+      {isLoading && <CircularProgress />}
+      <Form headline="New Debate" onSubmit={onSubmitHandler}>
         {displayForm}
-    </Form>
+      </Form>
+    </Fragment>
   );
 };
 

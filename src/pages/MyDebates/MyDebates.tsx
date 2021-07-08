@@ -9,9 +9,7 @@ type props = {
 const MyDebates = (props: props) => {
   return (
     <Fragment>
-      <DebateDemo />
-      <DebateDemo />
-      <DebateDemo />
+
     </Fragment>
   );
 };

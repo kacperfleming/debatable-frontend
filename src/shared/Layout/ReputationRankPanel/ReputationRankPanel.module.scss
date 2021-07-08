@@ -5,10 +5,11 @@
     position: fixed;
     top: 64px;
     right: 0;
-    width: 20vw;
+    width: 25vw;
     height: calc(100vh - 56px);
     box-shadow: 0 -5px 5px grey;
     overflow-y: auto;
+    display: none;
 
     &::-webkit-scrollbar {
         display: none;
@@ -16,6 +17,7 @@
     
     @media (min-width: 900px) {
         display: block;
+        width: 20vw;
     }
     
     .List {

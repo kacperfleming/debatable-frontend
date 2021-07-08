@@ -2,6 +2,8 @@ const ValidateInput = (value:any, rules:any) => {
     let warning = null;
     let checkedValue = value;
 
+    if(!value || !rules) return;
+
     if(rules.NWS) {
         checkedValue = value.trim();
     }

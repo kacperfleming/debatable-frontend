@@ -94,8 +94,9 @@ const ReputationRankPanel = (props: Props) => {
             <ListItem className={classes.ListItem}>
               <Author
                 name={user.name}
-                image={user.image}
+                avatar={user.image}
                 additionalData={`Reputation points: ${user.reputationPoints}`}
+                style={{fontSize: "0.75rem"}}
               />
             </ListItem>
           </Link>

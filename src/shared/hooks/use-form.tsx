@@ -38,7 +38,7 @@ type action = {
   type: "SET_DATA" | "CHANGE_VALUE" | "VALIDATE_INPUT" | "SET_FORM_VALIDITY";
   data?: object;
   id?: any;
-  val?: string | number | boolean;
+  val?: any;
   warning?: string;
 };
 
@@ -122,11 +122,13 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
 
   const pickedHandler = (event:ChangeEvent<HTMLInputElement>, id:any) => {
     if(event.target.files && event.target.files.length === 1) {
-      dispatch({type: 'CHANGE_VALUE', val: event.target.value, id});
+      console.log(event.target.files[0]);
+      console.log(formState.inputs[id]);
       setData({
         ...formState.inputs,
         [id]: {
           ...formState.inputs[id],
+          value: event.target.files[0],
           isValid: true
         }
       });
@@ -135,7 +137,8 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
     setData({
       ...formState.inputs,
       [id]: {
-        ...formState.inputs[id],
+        ...formState.intpus[id],
+        value: '',
         isValid: false
       }
     });

@@ -6,6 +6,8 @@ import {authActions} from '../store/authSlice';
 const Logout = () => {
     const dispatch = useDispatch();
     dispatch(authActions.logout());
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('userId');
 
     return <Redirect to="/auth" />
 }
