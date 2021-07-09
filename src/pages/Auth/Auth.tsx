@@ -3,6 +3,7 @@ import { Typography, Button, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {useDispatch} from 'react-redux';
 
+import Notification from '../../shared/UIElements/Notification';
 import {authActions} from '../../store/authSlice';
 import useForm from "../../shared/hooks/use-form";
 import useHttp from "../../shared/hooks/use-http";
@@ -99,11 +100,11 @@ const Auth = (props: props) => {
 
   function onSubmitHandler() {
     if(isLoggingIn) {
-        sendRequest('http://localhost:5000/api/users/login', 'POST', {
+        sendRequest('http://localhost:5000/api/users/login', {success: 'Logged in.', error: 'Could not log you in. Please, try again.'}, 'POST', {
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
         })
-        .then(response => {
+        .then((response:any) => {
           const {token, userId} = response?.data;
           localStorage.setItem('jwt', token);
           localStorage.setItem('userId', userId);
@@ -117,11 +118,12 @@ const Auth = (props: props) => {
       formData.append('password', formState.inputs.password.value);
       formData.append('avatar', formState.inputs.avatar.value);
 
-        sendRequest('http://localhost:5000/api/users/signup', 'POST', formData,
+        sendRequest('http://localhost:5000/api/users/signup', {success: 'Signed up', error: 'Could not sign you up. Please, try again.'}, 'POST', formData,
         )
-        .then(response => {
-          console.log(response);
+        .then((response:any) => {
+          if(response?.statusText === 'OK') {
             onChangeModeHandler();
+          }
         });
     }
   }

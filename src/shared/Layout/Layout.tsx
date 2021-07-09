@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, memo } from "react";
 import { Paper } from "@material-ui/core";
 
 import UserPanel from "./UserPanel/UserPanel";
@@ -21,4 +21,4 @@ const Layout = (props: Props) => {
   );
 };
 
-export default Layout;
+export default memo(Layout);

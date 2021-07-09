@@ -8,18 +8,20 @@ type props = {
   description?: string;
   author: string;
   authorId: string;
-  creationDate: string;
+  created_at: number;
   avatar: string;
   showDescription: boolean;
 };
 
 const TopicCard = (props: props) => {
+  const date = new Date(props.created_at);
+
   return (
     <Paper component="section" elevation={0} className={classes.TopicCard}>
       <Author
         name={props.author}
         avatar={props.avatar}
-        additionalData={props.creationDate}
+        additionalData={`${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getFullYear())}`}
       />
       <Typography className={classes.Topic} variant="h5" component="h2">
         {props.title}

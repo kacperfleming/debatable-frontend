@@ -11,7 +11,8 @@ type Props = {
   author: string;
   authorId: string;
   avatar: string;
-  creationDate: string;
+  created_at: number;
+  ref?: any;
 };
 
 const DebateDemo = (props: Props) => {
@@ -20,10 +21,8 @@ const DebateDemo = (props: Props) => {
   const onHandleDescription = () =>
     setShowDescription((prevState) => !prevState);
 
-    console.log(props.avatar);
-
   return (
-    <Paper component="article" className={classes.DebateDemo}>
+    <Paper ref={props.ref} component="article" className={classes.DebateDemo}>
 
       <TopicCard {...props} showDescription={showDescription} />
       <DebateControls hasDescription={!!props.description} showDescription={showDescription} handleDescription={onHandleDescription} />

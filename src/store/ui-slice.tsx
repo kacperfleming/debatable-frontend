@@ -1,29 +1,44 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+type state = {
     notification: {
-        message: null,
-        type: null,
-        timer: 5000
-    },
-    isLoading: false
+        open: boolean;
+        message?: string;
+        type?: 'error' | 'warning' | 'info' | 'success' 
+    };
+    isLoading: boolean;
 }
 
+const initialState = {
+  notification: {
+    open: false,
+    message: null,
+    type: null,
+  },
+  isLoading: false,
+};
+
 const UISlice = createSlice({
-    name: 'UISlice',
-    initialState,
-    reducers: {
-        setLoading(state, action) {
-            state.isLoading = action.payload
-        },
-        setNotification(state, action) {
-            state.notification = {
-                message: action.payload.message,
-                type: action.payload.type,
-                timer: action.payload?.timer
-            }
-        }
-    }
+  name: "UISlice",
+  initialState,
+  reducers: {
+    setLoading(state, action) {
+      state.isLoading = action.payload;
+    },
+    setNotification(state, action) {
+      state.notification = {
+        open: true,
+        message: action.payload.message,
+        type: action.payload.type,
+      };
+    },
+    closeNotifiaction(state) {
+      state.notification = {
+        ...state.notification,
+        open: false,
+      };
+    },
+  },
 });
 
 export const UIActions = UISlice.actions;

@@ -13,7 +13,7 @@ type props = {
     message: string;
     open: boolean;
     timer?: number;
-    onClose: () => void;
+    onClose: any;
 };
 
 const Notification = (props: props) => (
