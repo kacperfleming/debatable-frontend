@@ -2,8 +2,8 @@ import React, {ChangeEvent, useState} from 'react';
 import { Typography, Button, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {useDispatch} from 'react-redux';
+import { useHistory } from 'react-router';
 
-import Notification from '../../shared/UIElements/Notification';
 import {authActions} from '../../store/authSlice';
 import useForm from "../../shared/hooks/use-form";
 import useHttp from "../../shared/hooks/use-http";
@@ -39,6 +39,8 @@ type props = {};
 
 const Auth = (props: props) => {
   const classes = useStyles();
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -109,6 +111,10 @@ const Auth = (props: props) => {
           localStorage.setItem('jwt', token);
           localStorage.setItem('userId', userId);
           dispatch(authActions.login({token, userId}));
+          history.replace('/');
+        })
+        .catch(err => {
+
         });
     } else {
       console.log(formState.inputs.avatar.value);
@@ -124,6 +130,9 @@ const Auth = (props: props) => {
           if(response?.statusText === 'OK') {
             onChangeModeHandler();
           }
+        })
+        .catch(err => {
+          
         });
     }
   }

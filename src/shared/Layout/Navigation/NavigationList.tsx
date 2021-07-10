@@ -15,7 +15,6 @@ type Props = {
 const NavigationList = (props: Props) => {
   const token = useSelector((state:any) => state.auth.token);
 
-  console.log(token);
 
   let links = [
     {

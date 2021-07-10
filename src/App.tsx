@@ -23,14 +23,12 @@ function App() {
 
   const {message, type, open} = useSelector((state:any) => state.UI.notification);
 
-  console.log(message);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
     if (!!decodedToken) {
       if (!isExpired) {
         const expiresIn = decodedToken.exp - Date.now() / 1000;
-        console.log(expiresIn);
         dispatch(
           authActions.login({
             token: localStorage.getItem("jwt"),

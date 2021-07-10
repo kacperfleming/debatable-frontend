@@ -1,4 +1,4 @@
-import { Paper, Typography, Fab, Badge, Tooltip } from "@material-ui/core";
+import { Fab, Badge, Tooltip } from "@material-ui/core";
 import {
   ExpandMore,
   ExpandLess,
@@ -7,6 +7,7 @@ import {
   Delete,
   Edit,
 } from "@material-ui/icons";
+import { useSelector } from "react-redux";
 
 import classes from "./DebateControls.module.scss";
 
@@ -15,9 +16,12 @@ type props = {
   showDescription: boolean;
   authorMode?: boolean;
   hasDescription: boolean;
+  onDelete: () => void;
+  onEdit: () => void;
 };
 
 const DebateControls = (props: props) => {
+
   return (
     <section
       className={`${classes.Controls} ${
@@ -26,7 +30,7 @@ const DebateControls = (props: props) => {
     >
       {props.authorMode ? (
         <Tooltip title="Delete">
-          <Fab size="small">
+          <Fab onClick={props.onDelete} size="small">
             <Delete />
           </Fab>
         </Tooltip>
@@ -58,7 +62,7 @@ const DebateControls = (props: props) => {
       </Badge>
       {props.authorMode ? (
         <Tooltip title="Edit">
-          <Fab size="small">
+          <Fab onClick={props.onEdit} size="small">
             <Edit />
           </Fab>
         </Tooltip>

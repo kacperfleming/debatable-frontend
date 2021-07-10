@@ -95,7 +95,7 @@ const ReputationRankPanel = (props: Props) => {
               <Author
                 name={user.name}
                 avatar={user.image}
-                additionalData={`Reputation points: ${user.reputationPoints}`}
+                additionalData={`Reputation: ${user.reputationPoints}`}
                 style={{fontSize: "0.75rem"}}
               />
             </ListItem>

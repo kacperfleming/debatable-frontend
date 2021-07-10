@@ -3,6 +3,7 @@ import { CircularProgress } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
+import useDebate from "../../shared/hooks/use-debate";
 import useForm from "../../shared/hooks/use-form";
 import useHttp from "../../shared/hooks/use-http";
 import Form from "../../shared/UIElements/Form";
@@ -18,6 +19,7 @@ interface reduxState {
 }
 
 const NewDebate = (props: props) => {
+  const {addDebate} = useDebate();
   const token = useSelector((state: reduxState) => state.auth.token);
   const history = useHistory();
 
@@ -54,20 +56,7 @@ const NewDebate = (props: props) => {
   }, []);
 
   function onSubmitHandler() {
-    console.log(token);
-    sendRequest(
-      "http://localhost:5000/api/debates", {success: 'Yay! Your debate is waiting for people.', error: 'Could not create your debate :(. Please, try again.'},
-      "POST",
-      {
-        title: formState.inputs.title.value,
-        description: formState.inputs.description.value,
-      },
-      {
-        "Authorization": `Bearer ${token}`,
-      }
-    ).then((response) => {
-      history.push('/');
-    });
+    addDebate({title: formState.inputs.title.value, description: formState.inputs.description.value})
   }
 
   return (

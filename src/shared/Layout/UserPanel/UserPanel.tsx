@@ -40,7 +40,7 @@ const USER_PANEL_ITEM_LIST = [
 ];
 
 const UserPanel = (props: Props) => {
-  console.log(props.desktopOnly);
+
   return (
     <Box className={`${classes.UserPanel} ${props.desktopOnly ? classes.DesktopOnly : ''}`}>
       <MenuList>

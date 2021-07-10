@@ -1,6 +1,9 @@
 import {useState} from 'react';
 import {Paper} from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
 
+import useDebate from '../shared/hooks/use-debate';
+import { debateActions } from '../store/debateSlice';
 import TopicCard from "./TopicCard";
 import DebateControls from './DebateControls';
 import classes from "./DebateDemo.module.scss";
@@ -13,19 +16,30 @@ type Props = {
   avatar: string;
   created_at: number;
   ref?: any;
+  id: string;
 };
 
 const DebateDemo = (props: Props) => {
+  const {deleteDebate} = useDebate();
+
   const [showDescription, setShowDescription] = useState(false);
+
+  const userId = useSelector((state:any) => state.auth.userId);
 
   const onHandleDescription = () =>
     setShowDescription((prevState) => !prevState);
+
+  const deleteDebateHandler = () => deleteDebate(props.id);
+
+  const editDebateHandler = () => {
+
+  };
 
   return (
     <Paper ref={props.ref} component="article" className={classes.DebateDemo}>
 
       <TopicCard {...props} showDescription={showDescription} />
-      <DebateControls hasDescription={!!props.description} showDescription={showDescription} handleDescription={onHandleDescription} />
+      <DebateControls onDelete={deleteDebateHandler} onEdit={editDebateHandler} authorMode={userId === props.authorId} hasDescription={!!props.description} showDescription={showDescription} handleDescription={onHandleDescription} />
 
     </Paper>
   );
