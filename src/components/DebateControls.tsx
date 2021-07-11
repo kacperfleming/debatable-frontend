@@ -6,6 +6,7 @@ import {
   ThumbDown,
   Delete,
   Edit,
+  OndemandVideoTwoTone,
 } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 
@@ -16,8 +17,11 @@ type props = {
   showDescription: boolean;
   authorMode?: boolean;
   hasDescription: boolean;
+  likes: number;
+  dislikes: number;
   onDelete: () => void;
   onEdit: () => void;
+  onVote: (option:boolean) => void;
 };
 
 const DebateControls = (props: props) => {
@@ -36,9 +40,9 @@ const DebateControls = (props: props) => {
         </Tooltip>
       ) : null}
 
-      <Badge badgeContent={2} color="primary">
+      <Badge badgeContent={props.dislikes} color="primary">
         <Tooltip title="Disagree">
-          <Fab size="small" color="secondary">
+          <Fab onClick={() => props.onVote(false)} size="small" color="secondary">
             <ThumbDown />
           </Fab>
         </Tooltip>
@@ -53,9 +57,9 @@ const DebateControls = (props: props) => {
           </Fab>
         </Tooltip>
       ) : null}
-      <Badge badgeContent={99} color="secondary">
+      <Badge badgeContent={props.likes} color="secondary">
         <Tooltip title="Agree">
-          <Fab size="small" color="primary">
+          <Fab onClick={() => props.onVote(true)} size="small" color="primary">
             <ThumbUp />
           </Fab>
         </Tooltip>

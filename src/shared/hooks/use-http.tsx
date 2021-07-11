@@ -14,6 +14,7 @@ const useHttp = () => {
 
     const sendRequest = useCallback((url:string, message?:{success?:string, error?:string}, method:method='GET', data?:object, headers?:object) => {
         setIsLoading(true);
+        console.log(url);
         return new Promise((resolve, reject) => {
             axios({
                method: method,
@@ -31,8 +32,7 @@ const useHttp = () => {
                }
            })
            .catch(err => {
-               console.log(err.message);
-               dispatch(UIActions.setNotification({message: err.message || message?.error || 'Action failed! Please, try again.', type: 'error'}));
+               dispatch(UIActions.setNotification({message: err.response?.data?.message || message?.error || 'Action failed! Please, try again.', type: 'error'}));
                setIsLoading(false);
                setError(err);
                reject(err);

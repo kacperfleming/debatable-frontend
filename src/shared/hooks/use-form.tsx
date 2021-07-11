@@ -194,6 +194,8 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
         value={el.input.value}
         variant="outlined"
         required={el.input.required}
+        disabled={el.input.disabled}
+        focused={el.input.focused}
         label={el.input.label}
         error={!!el.input.warning}
         helperText={el.input.warning}

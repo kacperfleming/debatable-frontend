@@ -7,7 +7,7 @@ import Notification from "./shared/UIElements/Notification";
 import { authActions } from "./store/authSlice";
 import { UIActions } from "./store/ui-slice";
 import Layout from "./shared/Layout/Layout";
-import NewDebate from "./pages/NewDebate/NewDebate";
+import DebateForm from "./pages/DebateForm/DebateForm";
 import Global from "./pages/Global/Global";
 import MyDebates from "./pages/MyDebates/MyDebates";
 import Auth from "./pages/Auth/Auth";
@@ -64,7 +64,10 @@ function App() {
     routes = (
       <Switch>
         <Route path="/new-debate">
-          <NewDebate />
+          <DebateForm />
+        </Route>
+        <Route path="/edit/:did">
+          <DebateForm />
         </Route>
         <Route path="/my-debates">
           <MyDebates />

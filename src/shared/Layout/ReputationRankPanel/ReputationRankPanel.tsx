@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -7,95 +7,41 @@ import {
 } from "@material-ui/core";
 import {} from "@material-ui/icons";
 
+import useHttp from "../../hooks/use-http";
 import Author from "../../../components/Author";
 import classes from "./ReputationRankPanel.module.scss";
 
-type Props = {};
+type Props = {
 
-const USER_PANEL_RANK_ITEMS = [
-  {
-    userId: 1,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 2,
-    name: "Max Smith",
-    reputationPoints: -123,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 3,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 4,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 5,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 6,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 7,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 8,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 9,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-  {
-    userId: 10,
-    name: "Jan Kowalski",
-    reputationPoints: 1234,
-    image:
-      "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  },
-];
+};
 
 const ReputationRankPanel = (props: Props) => {
+  const {sendRequest} = useHttp();
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    if(users.length > 0) return;
+    sendRequest('http://localhost:5000/api/users/rank')
+      .then((response:any) => {
+        console.log(response);
+        setUsers(response.data.users);
+      })
+      .catch(err => {
+
+      });
+  }, [sendRequest, users]);
+
   return (
     <Box className={classes.ReputationRankPanel} component="section">
       <List className={classes.List}>
-        {USER_PANEL_RANK_ITEMS.map((user) => (
-          <Link key={user.userId} className={classes.Link} to={`/users/${user.userId}`}>
+        {users.length > 0 && users.map((user:any) => (
+          <Link key={user.id} className={classes.Link} to={`/users/${user.id}`}>
             <ListItem className={classes.ListItem}>
               <Author
-                name={user.name}
-                avatar={user.image}
-                additionalData={`Reputation: ${user.reputationPoints}`}
+                name={user.usernamename}
+                avatar={user.avatar}
+                additionalData={`Reputation: ${user.reputation}`}
                 style={{fontSize: "0.75rem"}}
               />
             </ListItem>

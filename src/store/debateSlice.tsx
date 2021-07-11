@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+const initialState:{debates: any, pagination:number} = {
     debates: [],
     pagination: 0
 }
@@ -23,6 +23,9 @@ const debateSlice = createSlice({
         },
         deleteDebate(state, action) {
             state.debates = state.debates.filter((d:any)=> d.id !== action.payload);
+        },
+        editEdbate(state, action) {
+            state.debates[state.debates.findIndex((d:any) => d.id === action.payload.id)] = action.payload;
         }
     }
 });

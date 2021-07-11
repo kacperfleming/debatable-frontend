@@ -16,7 +16,7 @@ const Author = (props: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    setAvatar(props.name[0].toUpperCase());
+    props.name && setAvatar(props.name[0].toUpperCase());
     const image = imageRef.current;
 
       function onLoadImage() {
