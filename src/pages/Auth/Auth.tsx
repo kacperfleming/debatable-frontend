@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import { useHistory } from 'react-router';
 
 import {authActions} from '../../store/authSlice';
+import { userActions } from '../../store/userSlice';
 import useForm from "../../shared/hooks/use-form";
 import useHttp from "../../shared/hooks/use-http";
 import Form from '../../shared/UIElements/Form';
@@ -107,10 +108,13 @@ const Auth = (props: props) => {
             password: formState.inputs.password.value,
         })
         .then((response:any) => {
-          const {token, userId} = response?.data;
+          const {user, token} = response?.data;
+          const {userId} = user;
+          console.log(user);
           localStorage.setItem('jwt', token);
-          localStorage.setItem('userId', userId);
+          localStorage.setItem('userId', user.userId);
           dispatch(authActions.login({token, userId}));
+          dispatch(userActions.setUserData(user));
           history.replace('/');
         })
         .catch(err => {

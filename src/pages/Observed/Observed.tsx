@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import { useParams } from "react-router";
 import {LinearProgress} from '@material-ui/core';
 
 import useAsyncLoading from "../../shared/hooks/use-asyncLoading";
@@ -7,9 +6,8 @@ import DebateDemo from "../../components/DebateDemo";
 
 type Props = {};
 
-const UserDebates = (props: Props) => {
-  const params:any = useParams();
-  const { data, border, isLoading }: {data: any, border: any, isLoading: boolean} = useAsyncLoading({ step: 5, url: `debates/user/${params.uid}`, auth: false });
+const Observed = (props: Props) => {
+  const { data, border, isLoading }: {data: any, border: any, isLoading: boolean} = useAsyncLoading({ step: 5, url: "users/observed", auth: true });
 
   return (
     <Fragment>
@@ -34,4 +32,4 @@ const UserDebates = (props: Props) => {
   );
 };
 
-export default UserDebates;
+export default Observed;

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { debateActions } from "../../store/debateSlice";
+import { userActions } from "../../store/userSlice";
 
 const useDebate = () => {
     const history = useHistory();
@@ -55,6 +56,7 @@ const useDebate = () => {
     }
 
     const getDebates = () => {
+      if(isBlocked || isLoading) return;
         sendRequest(`http://localhost:5000/api/debates/${pagination}`, {
             error: "Could not get debates.",
           }).then((response: any) => {
@@ -70,6 +72,21 @@ const useDebate = () => {
           .catch(err => {
 
           });
+    }
+
+    const toggleFavorite = (debateId:string) => {
+      sendRequest(`http://localhost:5000/api/users/favorite/${debateId}`, {
+        
+      }, 'POST', { debateId }, {'Authorization': `Bearer ${token}`}).then((response: any) => {
+        if(response.data.add) {
+          dispatch(userActions.addFavorite(debateId));
+        } else {
+          dispatch(userActions.removeFavorite(debateId));
+        }
+      })
+      .catch(err => {
+
+      });
     }
 
     const getDebateById = (id:string) => {
@@ -122,7 +139,9 @@ const useDebate = () => {
         voteInDebate,
         getDebateById,
         editDebate,
-        debate
+        toggleFavorite,
+        debate,
+        isLoading
     }
 }
 

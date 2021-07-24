@@ -1,27 +1,30 @@
-import { useEffect, useState, Fragment, useCallback } from "react";
-import { CircularProgress } from "@material-ui/core";
+import { useEffect, Fragment } from "react";
+import { LinearProgress } from "@material-ui/core";
 import { useInView } from "react-intersection-observer";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { debateActions } from "../../store/debateSlice";
+import useScrollMonitor from "../../shared/hooks/useScrollMonitor";
 import useDebate from "../../shared/hooks/use-debate";
-import useHttp from "../../shared/hooks/use-http";
 import DebateDemo from "../../components/DebateDemo";
-import classes from "./Global.module.scss";
 
-type Props = {};
+type Props = {
+
+};
 
 const Global = (props: Props) => {
+  const scrollInfo = useScrollMonitor();
+
   const { ref: containerRef, inView, entry } = useInView({ threshold: 0.1 });
 
-  const {getDebates, isBlocked} = useDebate();
+  const {getDebates, isBlocked, isLoading} = useDebate();
 
   const debates = useSelector((state:any) => state.debates.debates);
 
+
   useEffect(() => {
-    if (!inView || isBlocked) return;
+    if (scrollInfo > 900 || isBlocked) return;
     getDebates();
-  }, [inView, isBlocked]);
+  }, [scrollInfo, isBlocked]);
 
   return (
     <Fragment>
@@ -44,7 +47,7 @@ const Global = (props: Props) => {
               ))}
           </div>
       )}
-      {!isBlocked ? <div style={{height: 200}} ref={containerRef}></div> : <div style={{textAlign: 'center'}}><CircularProgress /></div>}
+      {isLoading && <LinearProgress style={{marginBottom: 20}} />}
     </Fragment>
   );
 };

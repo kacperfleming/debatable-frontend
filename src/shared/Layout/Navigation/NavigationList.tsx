@@ -13,7 +13,7 @@ type Props = {
 };
 
 const NavigationList = (props: Props) => {
-  const token = useSelector((state:any) => state.auth.token);
+  const auth = useSelector((state:any) => state.auth);
 
 
   let links = [
@@ -31,7 +31,7 @@ const NavigationList = (props: Props) => {
     },
   ];
 
-  if(!!token) {
+  if(!!auth.token) {
     links = [
       {
         to: '/',
@@ -46,7 +46,7 @@ const NavigationList = (props: Props) => {
         tooltip: 'New Debate'
       },
       {
-        to: '/my-debates',
+        to: `/debates/${auth.userId}`,
         exact: false,
         icon: <Forum />,
         tooltip: 'My Debates'

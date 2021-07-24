@@ -3,13 +3,16 @@ import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useJwt } from "react-jwt";
 
+import useHttp from "./shared/hooks/use-http";
 import Notification from "./shared/UIElements/Notification";
 import { authActions } from "./store/authSlice";
+import { userActions } from "./store/userSlice";
 import { UIActions } from "./store/ui-slice";
 import Layout from "./shared/Layout/Layout";
 import DebateForm from "./pages/DebateForm/DebateForm";
 import Global from "./pages/Global/Global";
-import MyDebates from "./pages/MyDebates/MyDebates";
+import UserDebates from "./pages/MyDebates/MyDebates";
+import Observed from "./pages/Observed/Observed";
 import Auth from "./pages/Auth/Auth";
 import Logout from "./components/Logout";
 import "./App.css";
@@ -17,9 +20,11 @@ import "./App.css";
 function App() {
   const dispatch = useDispatch();
 
+  const {sendRequest} = useHttp();
+
   const { isExpired, decodedToken } = useJwt(localStorage.getItem("jwt") || "");
 
-  const storedToken = useSelector((state: any) => state.auth.token);
+  const authState = useSelector((state: any) => state.auth);
 
   const {message, type, open} = useSelector((state:any) => state.UI.notification);
 
@@ -28,17 +33,30 @@ function App() {
     let timeout: ReturnType<typeof setTimeout> | undefined;
     if (!!decodedToken) {
       if (!isExpired) {
-        const expiresIn = decodedToken.exp - Date.now() / 1000;
-        dispatch(
-          authActions.login({
-            token: localStorage.getItem("jwt"),
-            userId: decodedToken.userId,
-          })
-        );
-        timeout = setTimeout(() => {
-          dispatch(UIActions.setNotification({message: 'You were logout automatically.', type: 'info'}))
+        try {
+          const expiresIn = decodedToken.exp - Date.now() / 1000;
+          dispatch(
+            authActions.login({
+              token: localStorage.getItem("jwt"),
+              userId: decodedToken.userId,
+            })
+          );
+          sendRequest(`http://localhost:5000/api/users/user/${decodedToken.userId}`)
+            .then((res:any) => {
+              console.log(res.data);
+              dispatch(userActions.setUserData(res.data.user));
+            })
+            .catch(err => {
+
+            });
+          timeout = setTimeout(() => {
+            dispatch(UIActions.setNotification({message: 'You were logout automatically.', type: 'info'}))
+            dispatch(authActions.logout());
+          }, expiresIn * 1000);
+        } catch(err) {
+          dispatch(UIActions.setNotification({message: 'Sorry, auto-logging in failed.', type: 'error'}))
           dispatch(authActions.logout());
-        }, expiresIn * 1000);
+        }
       } else {
         dispatch(authActions.logout());
       }
@@ -60,7 +78,7 @@ function App() {
     </Switch>
   );
 
-  if (!!storedToken) {
+  if (!!authState.token) {
     routes = (
       <Switch>
         <Route path="/new-debate">
@@ -69,11 +87,14 @@ function App() {
         <Route path="/edit/:did">
           <DebateForm />
         </Route>
-        <Route path="/my-debates">
-          <MyDebates />
+        <Route path="/debates/:uid">
+          <UserDebates />
         </Route>
         <Route path="/logout">
           <Logout />
+        </Route>
+        <Route path="/observed" >
+          <Observed />
         </Route>
         <Route path="/" exact>
           <Global />

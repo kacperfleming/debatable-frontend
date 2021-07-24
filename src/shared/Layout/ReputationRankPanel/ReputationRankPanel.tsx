@@ -39,7 +39,7 @@ const ReputationRankPanel = (props: Props) => {
           <Link key={user.id} className={classes.Link} to={`/users/${user.id}`}>
             <ListItem className={classes.ListItem}>
               <Author
-                name={user.usernamename}
+                name={user.username}
                 avatar={user.avatar}
                 additionalData={`Reputation: ${user.reputation}`}
                 style={{fontSize: "0.75rem"}}

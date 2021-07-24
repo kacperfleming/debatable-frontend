@@ -48,7 +48,7 @@ const MainMenu = (props: Props) => {
       <Typography className={SCSSClasses.buttonsGroup} component="div">
         <Avatar className={SCSSClasses.BrandBG}>
           <Typography color="primary" className={SCSSClasses.Brand} component="h1">
-            D
+            V
           </Typography>
         </Avatar>
         <Button onClick={openSideDrawerHandler}>
