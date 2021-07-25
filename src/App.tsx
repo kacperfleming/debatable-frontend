@@ -9,25 +9,27 @@ import { authActions } from "./store/authSlice";
 import { userActions } from "./store/userSlice";
 import { UIActions } from "./store/ui-slice";
 import Layout from "./shared/Layout/Layout";
-import DebateForm from "./pages/DebateForm/DebateForm";
-import Global from "./pages/Global/Global";
-import UserDebates from "./pages/MyDebates/MyDebates";
-import Observed from "./pages/Observed/Observed";
-import Auth from "./pages/Auth/Auth";
-import Logout from "./components/Logout";
+import DebateForm from "./DebateForm/page/DebateForm";
+import Global from "./Global/page/Global";
+import UserDebates from "./UserDebates/page/UserDebates";
+import Observed from "./Observed/page/Observed";
+import Profile from "./Profile/page/Profile";
+import Auth from "./Auth/page/Auth";
+import Logout from "./Auth/page/Logout";
 import "./App.css";
 
 function App() {
   const dispatch = useDispatch();
 
-  const {sendRequest} = useHttp();
+  const { sendRequest } = useHttp();
 
   const { isExpired, decodedToken } = useJwt(localStorage.getItem("jwt") || "");
 
   const authState = useSelector((state: any) => state.auth);
 
-  const {message, type, open} = useSelector((state:any) => state.UI.notification);
-
+  const { message, type, open } = useSelector(
+    (state: any) => state.UI.notification
+  );
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -41,20 +43,30 @@ function App() {
               userId: decodedToken.userId,
             })
           );
-          sendRequest(`http://localhost:5000/api/users/user/${decodedToken.userId}`)
-            .then((res:any) => {
+          sendRequest(
+            `http://localhost:5000/api/users/user/${decodedToken.userId}`
+          )
+            .then((res: any) => {
               console.log(res.data);
               dispatch(userActions.setUserData(res.data.user));
             })
-            .catch(err => {
-
-            });
+            .catch((err) => {});
           timeout = setTimeout(() => {
-            dispatch(UIActions.setNotification({message: 'You were logout automatically.', type: 'info'}))
+            dispatch(
+              UIActions.setNotification({
+                message: "You were logout automatically.",
+                type: "info",
+              })
+            );
             dispatch(authActions.logout());
           }, expiresIn * 1000);
-        } catch(err) {
-          dispatch(UIActions.setNotification({message: 'Sorry, auto-logging in failed.', type: 'error'}))
+        } catch (err) {
+          dispatch(
+            UIActions.setNotification({
+              message: "Sorry, auto-logging in failed.",
+              type: "error",
+            })
+          );
           dispatch(authActions.logout());
         }
       } else {
@@ -63,7 +75,7 @@ function App() {
     }
 
     return () => {
-      if(typeof timeout !== 'undefined') clearTimeout(timeout);
+      if (typeof timeout !== "undefined") clearTimeout(timeout);
     };
   }, [decodedToken, isExpired]);
 
@@ -71,6 +83,9 @@ function App() {
     <Switch>
       <Route path="/auth">
         <Auth />
+      </Route>
+      <Route path="/user/:uid">
+        <Profile />
       </Route>
       <Route path="/" exact>
         <Global />
@@ -93,8 +108,11 @@ function App() {
         <Route path="/logout">
           <Logout />
         </Route>
-        <Route path="/observed" >
+        <Route path="/observed">
           <Observed />
+        </Route>
+        <Route path="/user/:uid">
+          <Profile />
         </Route>
         <Route path="/" exact>
           <Global />
@@ -106,7 +124,12 @@ function App() {
   return (
     <Fragment>
       <Layout>{routes}</Layout>
-      <Notification open={open} message={message} type={type} onClose={() => dispatch(UIActions.closeNotifiaction())} />
+      <Notification
+        open={open}
+        message={message}
+        type={type}
+        onClose={() => dispatch(UIActions.closeNotifiaction())}
+      />
     </Fragment>
   );
 }

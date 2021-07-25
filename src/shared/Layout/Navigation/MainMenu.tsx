@@ -7,10 +7,11 @@ import {
   Button,
   Backdrop,
   Drawer,
-  Fab
+  Fab,
+  Hidden,
 } from "@material-ui/core";
-import {Close} from '@material-ui/icons';
-import {makeStyles} from "@material-ui/styles";
+import { Close } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/styles";
 import { Menu } from "@material-ui/icons";
 
 import NavigationList from "./NavigationList";
@@ -21,18 +22,18 @@ type Props = {};
 
 const useStyles = makeStyles({
   drawer: {
-    backgroundColor: '#039be5',
-    width: '75vw',
+    backgroundColor: "#039be5",
+    width: "75vw",
     maxWidth: 400,
   },
   backButton: {
-    margin: '10px 10px 0 auto',
-    background: 'none',
-    '&:hover': {
-      background: '#f50057'
-    }
-  }
-})
+    margin: "10px 10px 0 auto",
+    background: "none",
+    "&:hover": {
+      background: "#f50057",
+    },
+  },
+});
 
 const MainMenu = (props: Props) => {
   const classes = useStyles();
@@ -45,18 +46,28 @@ const MainMenu = (props: Props) => {
   return (
     <AppBar position="fixed">
       <Toolbar className={SCSSClasses.MainMenu}>
-      <Typography className={SCSSClasses.buttonsGroup} component="div">
-        <Avatar className={SCSSClasses.BrandBG}>
-          <Typography color="primary" className={SCSSClasses.Brand} component="h1">
-            V
-          </Typography>
-        </Avatar>
-        <Button onClick={openSideDrawerHandler}>
-          <Menu className={SCSSClasses.NavToggler} fontSize="large" />
-        </Button>   
-      </Typography>
+        <Typography className={SCSSClasses.buttonsGroup} component="div">
+          <Avatar className={SCSSClasses.BrandBG}>
+            <Typography
+              color="primary"
+              className={SCSSClasses.Brand}
+              component="h1"
+            >
+              V
+            </Typography>
+          </Avatar>
+          <Hidden mdUp>
+            <Button onClick={openSideDrawerHandler}>
+              <Menu fontSize="large" />
+            </Button>
+          </Hidden>
+        </Typography>
         <Backdrop onClick={closeSideDrawerHandler} open={isMenuOpen}>
-          <Drawer classes={{paper: classes.drawer}} anchor="left" open={isMenuOpen}>
+          <Drawer
+            classes={{ paper: classes.drawer }}
+            anchor="left"
+            open={isMenuOpen}
+          >
             <Fab className={classes.backButton} title="Close">
               <Close />
             </Fab>

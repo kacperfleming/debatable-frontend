@@ -28,9 +28,9 @@ interface reduxState {
 }
 
 const NewDebate = (props: props) => {
-  const {addDebate, getDebateById, editDebate, debate, isBlocked} = useDebate();
+  const {addDebate, getDebateById, editDebate, data:debate, isBlocked} = useDebate();
   const userId = useSelector((state: reduxState) => state.auth.userId);
-  const debates = useSelector((state: reduxState) => state.debates.debates);
+
   const history = useHistory();
   const params:{did?:string} = useParams();
 

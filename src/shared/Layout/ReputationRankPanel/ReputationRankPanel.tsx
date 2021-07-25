@@ -8,7 +8,7 @@ import {
 import {} from "@material-ui/icons";
 
 import useHttp from "../../hooks/use-http";
-import Author from "../../../components/Author";
+import Author from "./Author";
 import classes from "./ReputationRankPanel.module.scss";
 
 type Props = {
@@ -36,7 +36,7 @@ const ReputationRankPanel = (props: Props) => {
     <Box className={classes.ReputationRankPanel} component="section">
       <List className={classes.List}>
         {users.length > 0 && users.map((user:any) => (
-          <Link key={user.id} className={classes.Link} to={`/users/${user.id}`}>
+          <Link key={user.id} className={classes.Link} to={`/user/${user.id}`}>
             <ListItem className={classes.ListItem}>
               <Author
                 name={user.username}

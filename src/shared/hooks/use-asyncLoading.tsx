@@ -5,16 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import {LinearProgress} from '@material-ui/core';
 
-import { debateActions } from "../../store/debateSlice";
 import useDebate from "../../shared/hooks/use-debate";
 import useHttp from "../../shared/hooks/use-http";
-import DebateDemo from "../../components/DebateDemo";
+import DebateDemo from "../components/DebateDemo/DebateDemo";
 
 type Props = {
   step: number;
   url: string;
   auth: boolean;
 };
+
+let firstLoading = true;
 
 const useAsyncLoading = (props: Props) => {
   const [pagination, setPagination] = useState(0);
@@ -50,7 +51,8 @@ const useAsyncLoading = (props: Props) => {
 }, [props, pagination]);
 
   useEffect(() => {
-    if (!inView || isBlocked) return;
+    if ((!inView || isBlocked) && !firstLoading) return;
+        firstLoading = false;
         setIsBlocked(true);
         getData();
   }, [inView, isBlocked, getData]);
@@ -63,7 +65,8 @@ const useAsyncLoading = (props: Props) => {
   return {
     data,
     border,
-    isLoading
+    isLoading,
+    isBlocked
   };
 };
 

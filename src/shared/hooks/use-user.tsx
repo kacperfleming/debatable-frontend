@@ -16,36 +16,21 @@ const useUser = () => {
 
   const [user, setUser] = useState<any>();
 
-  const toggleFavorite = (debateId: string) => {
-    sendRequest(
-      `http://localhost:5000/api/users/favorite/${debateId}`,
-      {},
-      "POST",
-      { debateId },
-      { Authorization: `Bearer ${token}` }
-    )
+
+  const getUser = (userId:string) => {
+    console.log(userId);
+    sendRequest(`http://localhost:5000/api/users/user/${userId}`)
       .then((response: any) => {
-        if (response.data.add) {
-          dispatch(userActions.addFavorite(debateId));
-        } else {
-          dispatch(userActions.removeFavorite(debateId));
-        }
+        setUser(response.data.user);
       })
-      .catch((err) => {});
+      .catch((err) => {
+
+      });
   };
 
-//   const getUser = (userId:string) => {
-//     sendRequest(`http://localhost:5000/api/users/${userId}`)
-//       .then((response: any) => {
-//         setUser(response.data.user);
-//       })
-//       .catch((err) => {
-
-//       });
-//   };
-
   return {
-    toggleFavorite,
+    getUser,
+    user
   };
 };
 

@@ -26,7 +26,7 @@ import clsx from "clsx";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import useDebate from "../shared/hooks/use-debate";
+import useDebate from "../../hooks/use-debate";
 
 type Props = {
   title: string;
@@ -39,6 +39,13 @@ type Props = {
   id: string;
   likes: number;
   dislikes: number;
+
+  userId: string;
+  observed: boolean;
+  onDelete: (id:string) => void;
+  onEdit: (id:string) => void;
+  onVote: (id:string, option:boolean) => void;
+  onToggleObserv: (id:string) => void;
 };
 
 const rnd = Math.floor(Math.random() * 3 + 1);
@@ -77,26 +84,26 @@ const useStyles = makeStyles((theme) => ({
 const DebateDemo = (props: Props) => {
   const styles = useStyles();
 
-  const history = useHistory();
+  // const history = useHistory();
 
-  const { deleteDebate, voteInDebate, toggleFavorite } = useDebate();
+  // const { deleteDebate, voteInDebate, toggleFavorite } = useDebate();
 
   const [showDescription, setShowDescription] = useState(false);
 
-  const userId = useSelector((state: any) => state.auth.userId);
+  // const userId = useSelector((state: any) => state.auth.userId);
 
-  const favorites = useSelector((state: any) => state.user.favorites);
+  // const favorites = useSelector((state: any) => state.user.favorites);
 
   const onHandleDescription = () =>
     setShowDescription((prevState) => !prevState);
 
-  const deleteDebateHandler = () => deleteDebate(props.id);
+  // const deleteDebateHandler = () => deleteDebate(props.id);
 
-  const editDebateHandler = () => history.push(`/edit/${props.id}`);
+  // const editDebateHandler = () => history.push(`/edit/${props.id}`);
 
-  const voteHandler = (option: boolean) => voteInDebate(props.id, option);
+  // const voteHandler = (option: boolean) => voteInDebate(props.id, option);
 
-  const toggleFavoriteHandler = () => toggleFavorite(props.id);
+  // const toggleFavoriteHandler = () => toggleFavorite(props.id);
 
   const date = new Date(props.created_at);
 
@@ -113,12 +120,12 @@ const DebateDemo = (props: Props) => {
           </Avatar>
         }
         action={
-          userId && (
+          props.userId && (
             <IconButton
-              onClick={toggleFavoriteHandler}
+              onClick={() => props.onToggleObserv(props.id)}
               aria-label="add to favorites"
             >
-              <Bookmark color={favorites.find((d:string) => d === props.id) && 'secondary'} />
+              <Bookmark color={props.observed ? 'secondary' : 'disabled'} />
             </IconButton>
           )
         }
@@ -137,7 +144,7 @@ const DebateDemo = (props: Props) => {
           <Badge badgeContent={props.dislikes} color="secondary">
             <IconButton
               aria-label="disagree with author"
-              onClick={() => voteHandler(false)}
+              onClick={() => props.onVote(props.id, false)}
               color="secondary"
             >
               <ThumbDown />
@@ -146,23 +153,23 @@ const DebateDemo = (props: Props) => {
           <Badge badgeContent={props.likes} color="primary">
             <IconButton
               aria-label="agree with author"
-              onClick={() => voteHandler(true)}
+              onClick={() => props.onVote(props.id, true)}
               color="primary"
             >
               <ThumbUp />
             </IconButton>
           </Badge>
         </Box>
-          {((props.description) || (userId == props.authorId)) && (
+          {((props.description) || (props.userId == props.authorId)) && (
             <Box
               className={styles.controlls}
             >
-              {props.authorId === userId && (
+              {props.authorId === props.userId && (
                 <>
                   <Tooltip title="Edit">
                     <IconButton
                       aria-label="edit debate"
-                      onClick={editDebateHandler}
+                      onClick={() => props.onEdit(props.id)}
                     >
                       <Edit />
                     </IconButton>
@@ -170,7 +177,7 @@ const DebateDemo = (props: Props) => {
                   <Tooltip title="Delete">
                     <IconButton
                       aria-label="delete debate"
-                      onClick={deleteDebateHandler}
+                      onClick={() => props.onDelete(props.id)}
                     >
                       <Delete />
                     </IconButton>

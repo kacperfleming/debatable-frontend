@@ -1,7 +1,7 @@
 import {useDispatch} from 'react-redux';
 import {Redirect} from 'react-router';
 
-import {authActions} from '../store/authSlice';
+import {authActions} from '../../store/authSlice';
 
 const Logout = () => {
     const dispatch = useDispatch();
