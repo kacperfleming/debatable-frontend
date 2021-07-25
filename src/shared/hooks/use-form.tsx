@@ -1,7 +1,8 @@
 import { ChangeEvent, useReducer, useCallback, useRef, Fragment } from "react";
-import { TextField, Tooltip, Fab, Button } from "@material-ui/core";
+import { TextField, Tooltip, Fab, Button, makeStyles } from "@material-ui/core";
 import { Face, Check } from "@material-ui/icons";
 
+import CustomButton from "../UIElements/Button";
 import ValidateInput from "../utils/ValidateInput";
 
 const DEFAULT_INPUTS = {
@@ -83,8 +84,18 @@ const formReducer = (state: any, action: action) => {
   }
 };
 
+const useStyles = makeStyles(theme => ({
+  button: {
+    transition: theme.transitions.create(['transform', 'box-shadow', 'background-position-x'], {
+      duration: theme.transitions.duration.standard, easing: theme.transitions.easing.easeOut
+    })
+  }
+}));
+
 const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, buttonText?:string, buttonStyles?:string) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
+
+  const styles = useStyles();
 
   const [formState, dispatch]: [any, any] = useReducer(formReducer, {
     inputs: { ...inputs },
@@ -206,7 +217,7 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
   const displayForm = (
     <Fragment>
       {mappedInputs}
-      <Button className={buttonStyles} variant="contained" color="primary" onClick={onSubmitForm}>{buttonText || 'Submit'}</Button>
+      <CustomButton className={styles.button} onClick={onSubmitForm}>{buttonText || 'Submit'}</CustomButton>
     </Fragment>
   )
 

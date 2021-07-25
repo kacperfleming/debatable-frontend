@@ -147,7 +147,7 @@ const Auth = (props: props) => {
         <Grid className={classes.switchGrid} component="label" container alignItems="center" spacing={1}>
           <Grid item>Sign up</Grid>
           <Grid item>
-            <Switch checked={isLoggingIn} onChange={onChangeModeHandler} name="checkedC" />
+            <Switch color="default" checked={isLoggingIn} onChange={onChangeModeHandler} name="checkedC" />
           </Grid>
           <Grid item>Log in</Grid>
         </Grid>
