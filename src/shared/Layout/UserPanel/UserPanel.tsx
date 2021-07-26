@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import {
   Box,
@@ -8,7 +7,7 @@ import {
   Typography,
   Divider,
 } from "@material-ui/core";
-import { Person, Forum, Bookmark, Settings } from "@material-ui/icons";
+import { Person, Forum, Bookmark } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -37,11 +36,6 @@ const UserPanel = (props: Props) => {
       text: "Observed",
       to: "/observed",
       icon: <Bookmark style={{ color: "black" }} />,
-    },
-    {
-      text: "Settings",
-      to: "/settings",
-      icon: <Settings style={{ color: "black" }} />,
     },
   ];
 

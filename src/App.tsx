@@ -1,15 +1,17 @@
-import React, { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useCallback, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useJwt } from "react-jwt";
 
+import Dialog from "./shared/UIElements/Dialog";
 import useHttp from "./shared/hooks/use-http";
 import Notification from "./shared/UIElements/Notification";
 import { authActions } from "./store/authSlice";
 import { userActions } from "./store/userSlice";
 import { UIActions } from "./store/ui-slice";
 import Layout from "./shared/Layout/Layout";
-import DebateForm from "./DebateForm/page/DebateForm";
+import DebateForm from "./DebateForm/page/NewDebate";
+import EditDebateForm from "./EditDebate/page/EditDebate";
 import Global from "./Global/page/Global";
 import UserDebates from "./UserDebates/page/UserDebates";
 import Observed from "./Observed/page/Observed";
@@ -18,10 +20,10 @@ import Auth from "./Auth/page/Auth";
 import Logout from "./Auth/page/Logout";
 import "./App.css";
 
-
-
 function App() {
   const dispatch = useDispatch();
+
+  const [dialog, setDialog] = useState(true);
 
   const { sendRequest } = useHttp();
 
@@ -32,6 +34,9 @@ function App() {
   const { message, type, open } = useSelector(
     (state: any) => state.UI.notification
   );
+
+  const closeDialog = useCallback(() => setDialog(false), []);
+
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -102,7 +107,7 @@ function App() {
           <DebateForm />
         </Route>
         <Route path="/edit/:did">
-          <DebateForm />
+          <EditDebateForm />
         </Route>
         <Route path="/debates/:uid">
           <UserDebates />
@@ -125,13 +130,16 @@ function App() {
 
   return (
     <Fragment>
-      <Layout>{routes}</Layout>
+      <Layout>
+        {routes}
+      </Layout>
       <Notification
         open={open}
         message={message}
         type={type}
         onClose={() => dispatch(UIActions.closeNotifiaction())}
       />
+      <Dialog open={dialog} handleClose={closeDialog} title="This app is in early stage of development." description="Dear user, this application might be not perfect yet. I am working hard to add new features. Enjoy its current state :)" />
     </Fragment>
   );
 }

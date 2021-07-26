@@ -5,11 +5,12 @@ import {
   Avatar,
   Toolbar,
   Button,
+  Fab,
   Backdrop,
   Drawer,
-  Fab,
   Hidden,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { Close } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import { Menu } from "@material-ui/icons";
@@ -43,19 +44,22 @@ const MainMenu = (props: Props) => {
 
   const closeSideDrawerHandler = () => setIsMenuOpen(false);
 
+
   return (
     <AppBar position="fixed">
       <Toolbar className={SCSSClasses.MainMenu}>
         <Typography className={SCSSClasses.buttonsGroup} component="div">
-          <Avatar className={SCSSClasses.BrandBG}>
-            <Typography
-              color="primary"
-              className={SCSSClasses.Brand}
-              component="h1"
-            >
-              V
-            </Typography>
-          </Avatar>
+          <Link style={{textDecoration: 'none'}} to="/">
+            <Avatar className={SCSSClasses.BrandBG}>
+              <Typography
+                color="primary"
+                className={SCSSClasses.Brand}
+                component="h1"
+              >
+                V
+              </Typography>
+            </Avatar>
+          </Link>
           <Hidden mdUp>
             <Button onClick={openSideDrawerHandler}>
               <Menu fontSize="large" />

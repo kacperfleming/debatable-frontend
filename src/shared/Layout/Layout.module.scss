@@ -1,6 +1,8 @@
 .Content {
     margin: 64px auto 0;
     width: 100%;
+    min-height: calc(100vh - 64px);
+    position: relative;
     @media(min-width: 900px) {
         margin: 64px 0 0;
         width: calc(100% - 20vw);

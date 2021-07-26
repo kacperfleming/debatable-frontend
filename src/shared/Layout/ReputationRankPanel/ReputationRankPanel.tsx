@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box, List, ListItem, makeStyles } from "@material-ui/core";
-import {} from "@material-ui/icons";
 
 import useHttp from "../../hooks/use-http";
 import Author from "./Author";
-import classes from "./ReputationRankPanel.module.scss";
 
-type Props = {};
+type Props = {
+
+};
 
 const useStyles = makeStyles((theme) => ({
   reputationRankPanel: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ReputationRankPanel = (props: Props) => {
-  const styles = useStyles();
+  const styles = useStyles(props);
 
   const { sendRequest } = useHttp();
 

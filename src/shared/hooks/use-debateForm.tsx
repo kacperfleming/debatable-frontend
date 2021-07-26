@@ -1,18 +1,10 @@
 import { Fragment, useEffect } from "react";
-import { CircularProgress } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 
 import useDebate from "../../shared/hooks/use-debate";
 import useForm from "../../shared/hooks/use-form";
-import useHttp from "../../shared/hooks/use-http";
 import Form from "../../shared/UIElements/Form";
-import { isPropertyDeclaration } from "typescript";
-import { PanoramaSharp } from "@material-ui/icons";
-
-type props = {
-  editMode?: boolean;
-};
 
 type auth = {
   userId?: string;
@@ -27,7 +19,7 @@ interface reduxState {
   debates: debates;
 }
 
-const NewDebate = (props: props) => {
+const useDebateForm = () => {
   const {addDebate, getDebateById, editDebate, data:debate, isBlocked} = useDebate();
   const userId = useSelector((state: reduxState) => state.auth.userId);
 
@@ -36,10 +28,11 @@ const NewDebate = (props: props) => {
 
   const { formState, displayForm, setData } = useForm(onSubmitHandler);
 
-  if(debate && userId !== debate.creator) history.goBack();
+  if(params.did && debate.length > 0 && (userId !== debate.creator)) history.goBack();
 
   useEffect(() => {
     !!params.did && !isBlocked && getDebateById(params.did);
+    if(params.did && debate.length < 1) return;
     setData({
       title: {
         elementType: "input",
@@ -82,4 +75,4 @@ const NewDebate = (props: props) => {
   );
 };
 
-export default NewDebate;
+export default useDebateForm;

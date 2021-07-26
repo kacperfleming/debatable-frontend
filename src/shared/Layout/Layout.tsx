@@ -1,5 +1,4 @@
 import React, { ReactElement, memo } from "react";
-import { Paper } from "@material-ui/core";
 
 import UserPanel from "./UserPanel/UserPanel";
 import ReputationRankPanel from "./ReputationRankPanel/ReputationRankPanel";
@@ -11,6 +10,7 @@ type Props = {
 };
 
 const Layout = (props: Props) => {
+
   return (
     <React.Fragment>
       <MainMenu />

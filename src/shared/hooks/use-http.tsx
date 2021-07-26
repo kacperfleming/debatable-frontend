@@ -38,7 +38,7 @@ const useHttp = () => {
                reject(err);
            });
         })
-    }, [axios]);
+    }, [dispatch]);
 
     return {
         sendRequest,

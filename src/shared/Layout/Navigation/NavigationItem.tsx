@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { MenuItem, Tooltip, Fab } from "@material-ui/core";
+import { Tooltip, Fab } from "@material-ui/core";
 
 import classes from "./NavigationItem.module.scss";
 

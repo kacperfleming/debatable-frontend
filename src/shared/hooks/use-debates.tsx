@@ -1,21 +1,17 @@
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import {LinearProgress} from '@material-ui/core';
 
 import DebateDemo from "../components/DebateDemo/DebateDemo";
 import useAsyncLoading from "./use-asyncLoading";
-import useDebate from "./use-debate";
 
 const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
     const history = useHistory();
 
-    const { data:debates, border, isLoading } = useAsyncLoading({ step: 5, url, auth});
-
-    const { deleteDebate, voteInDebate, toggleFavorite } = useDebate();
+    const { data:debates, border, voteInDebate, deleteDebate, toggleObserv } = useAsyncLoading({ step: 5, url, auth});
   
     const userId = useSelector((state: any) => state.auth.userId);
   
-    const observed = useSelector((state: any) => state.user.favorites);
+    const observed = useSelector((state: any) => state.user.observed);
   
     const deleteDebateHandler = (id:string) => deleteDebate(id);
   
@@ -23,7 +19,9 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
   
     const voteHandler = (id:string, option: boolean) => voteInDebate(id, option);
   
-    const toggleObservHandler = (id:string) => toggleFavorite(id);
+    const toggleObservHandler = (id:string) => toggleObserv(id);
+
+    if(debates[0]) console.log(debates.forEach((el:any) => console.log(el.likes)));
 
     return (
         <>
@@ -43,13 +41,13 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
 
                 userId={userId}
                 observed={observed.find((id:string) => id === el.id)}
+                voted={((el.likes.find((user:any) => user === userId) && 'liked') || (el.dislikes.find((user:any) => user === userId) && 'disliked'))}
                 onDelete={(id:string) => deleteDebateHandler(id)}
                 onEdit={(id:string) => editDebateHandler(id)}
                 onVote={(id:string, option:boolean) => voteHandler(id, option)}
                 onToggleObserv={(id:string) => toggleObservHandler(id)}
               />
             ))}
-            {isLoading && <LinearProgress style={{marginBottom: 20}}/>}
             {border}
         </>
       );

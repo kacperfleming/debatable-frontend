@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import {
   Card,
   CardActions,
@@ -12,8 +12,9 @@ import {
   makeStyles,
   Box,
   Tooltip,
+  List,
 } from "@material-ui/core";
-import { green, blue, red } from "@material-ui/core/colors";
+import { green, blue, red, pink, grey } from "@material-ui/core/colors";
 import {
   ExpandMore,
   Bookmark,
@@ -23,10 +24,6 @@ import {
   Delete,
 } from "@material-ui/icons";
 import clsx from "clsx";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
-
-import useDebate from "../../hooks/use-debate";
 
 type Props = {
   title: string;
@@ -40,20 +37,26 @@ type Props = {
   likes: number;
   dislikes: number;
 
+  voted: false | 'liked' | 'disliked';
   userId: string;
   observed: boolean;
-  onDelete: (id:string) => void;
-  onEdit: (id:string) => void;
-  onVote: (id:string, option:boolean) => void;
-  onToggleObserv: (id:string) => void;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
+  onVote: (id: string, option: boolean) => void;
+  onToggleObserv: (id: string) => void;
 };
 
 const rnd = Math.floor(Math.random() * 3 + 1);
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    mazWidth: 320,
-    marginBottom: 25,
+  root: {},
+  card: {
+    maxWidth: 600,
+    margin: "0 auto 20px",
+    background: `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.primary.main} 90%)`,
+  },
+  content: {
+    color: theme.palette.common.white,
   },
   reactions: {
     display: "flex",
@@ -65,6 +68,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     display: "flex",
     justifyContent: "space-between",
+  },
+  votingOption: {
+    background: `radial-gradient(${theme.palette.info.dark} 1%, transparent 90%)`,
+  },
+  votingIcon: {
+    color: theme.palette.common.white,
   },
   expand: {
     transform: "rotate(0deg)",
@@ -84,86 +93,73 @@ const useStyles = makeStyles((theme) => ({
 const DebateDemo = (props: Props) => {
   const styles = useStyles();
 
-  // const history = useHistory();
-
-  // const { deleteDebate, voteInDebate, toggleFavorite } = useDebate();
-
   const [showDescription, setShowDescription] = useState(false);
-
-  // const userId = useSelector((state: any) => state.auth.userId);
-
-  // const favorites = useSelector((state: any) => state.user.favorites);
 
   const onHandleDescription = () =>
     setShowDescription((prevState) => !prevState);
 
-  // const deleteDebateHandler = () => deleteDebate(props.id);
-
-  // const editDebateHandler = () => history.push(`/edit/${props.id}`);
-
-  // const voteHandler = (option: boolean) => voteInDebate(props.id, option);
-
-  // const toggleFavoriteHandler = () => toggleFavorite(props.id);
-
   const date = new Date(props.created_at);
 
+  console.log(props.voted);
+
   return (
-    <Card className={styles.root}>
-      <CardHeader
-        avatar={
-          <Avatar
-            src={`http://localhost:5000/${props.avatar}` || ""}
-            aria-label="user avatar"
-            className={styles.avatar}
-          >
-            {props.author[0].toLocaleUpperCase()}
-          </Avatar>
-        }
-        action={
-          props.userId && (
-            <IconButton
-              onClick={() => props.onToggleObserv(props.id)}
-              aria-label="add to favorites"
+    <List className={styles.root}>
+      <Card className={styles.card}>
+        <CardHeader
+          avatar={
+            <Avatar
+              src={`http://localhost:5000/${props.avatar}` || ""}
+              aria-label="user avatar"
+              className={styles.avatar}
             >
-              <Bookmark color={props.observed ? 'secondary' : 'disabled'} />
-            </IconButton>
-          )
-        }
-        title={props.author}
-        subheader={`${String(date.getDate()).padStart(2, "0")}/${String(
-          date.getMonth() + 1
-        ).padStart(2, "0")}/${String(date.getFullYear())}`}
-      />
-      <CardContent>
-        <Typography variant="h5" color="textPrimary" component="h2">
-          {props.title}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Box className={styles.reactions}>
-          <Badge badgeContent={props.dislikes} color="secondary">
-            <IconButton
-              aria-label="disagree with author"
-              onClick={() => props.onVote(props.id, false)}
-              color="secondary"
-            >
-              <ThumbDown />
-            </IconButton>
-          </Badge>
-          <Badge badgeContent={props.likes} color="primary">
-            <IconButton
-              aria-label="agree with author"
-              onClick={() => props.onVote(props.id, true)}
-              color="primary"
-            >
-              <ThumbUp />
-            </IconButton>
-          </Badge>
-        </Box>
-          {((props.description) || (props.userId == props.authorId)) && (
-            <Box
-              className={styles.controlls}
-            >
+              {props.author[0].toLocaleUpperCase()}
+            </Avatar>
+          }
+          action={
+            props.userId && (
+              <Tooltip title="Observe">
+              <IconButton
+                onClick={() => props.onToggleObserv(props.id)}
+                aria-label="add to favorites"
+              >
+                <Bookmark color={props.observed ? "secondary" : "inherit"} />
+              </IconButton>
+              </Tooltip>
+            )
+          }
+          title={props.author}
+          subheader={`${String(date.getDate()).padStart(2, "0")}/${String(
+            date.getMonth() + 1
+          ).padStart(2, "0")}/${String(date.getFullYear())}`}
+        />
+        <CardContent className={styles.content}>
+          <Typography variant="h5" color="inherit" component="h2">
+            {props.title}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <Box className={styles.reactions}>
+            <Badge badgeContent={props.dislikes} color="primary">
+              <IconButton
+                className={styles.votingOption}
+                aria-label="disagree with author"
+                onClick={() => props.onVote(props.id, false)}
+              >
+                <ThumbDown className={styles.votingIcon} style={{color: props.voted ? (props.voted === 'disliked' ? pink[600] : grey[600]) : 'white'}} />
+              </IconButton>
+            </Badge>
+            <Badge badgeContent={props.likes} color="primary">
+              <IconButton
+                className={styles.votingOption}
+                aria-label="agree with author"
+                onClick={() => props.onVote(props.id, true)}
+              >
+                <ThumbUp className={styles.votingIcon} style={{color: props.voted ? (props.voted === 'liked' ? blue[600] : grey[600]) : 'white'}} />
+              </IconButton>
+            </Badge>
+          </Box>
+          {(props.description || props.userId == props.authorId) && (
+            <Box className={styles.controlls}>
               {props.authorId === props.userId && (
                 <>
                   <Tooltip title="Edit">
@@ -198,13 +194,16 @@ const DebateDemo = (props: Props) => {
               )}
             </Box>
           )}
-      </CardActions>
-      <Collapse in={showDescription} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>{props.description || null}</Typography>
-        </CardContent>
-      </Collapse>
-    </Card>
+        </CardActions>
+        <Collapse in={showDescription} timeout="auto" unmountOnExit>
+          <CardContent className={styles.content}>
+            <Typography color="inherit" paragraph>
+              {props.description || null}
+            </Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
+    </List>
   );
 };
 

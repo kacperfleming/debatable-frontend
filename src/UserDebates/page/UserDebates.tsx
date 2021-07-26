@@ -3,8 +3,6 @@ import { useParams } from "react-router";
 import {LinearProgress} from '@material-ui/core';
 
 import useDebates from "../../shared/hooks/use-debates";
-import useAsyncLoading from "../../shared/hooks/use-asyncLoading";
-import DebateDemo from "../../shared/components/DebateDemo/DebateDemo";
 
 type Props = {};
 

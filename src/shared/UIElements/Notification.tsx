@@ -17,7 +17,7 @@ type props = {
 };
 
 const Notification = (props: props) => (
-    <Snackbar open={props.open} autoHideDuration={props.timer || 5000} onClose={props.onClose}>
+    <Snackbar open={props.open} autoHideDuration={props.timer || 2000} onClose={props.onClose}>
         <Alert onClose={props.onClose} severity={props.type || 'info'}>
             {props.message}
         </Alert>

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import {useState} from 'react';
 import { Typography, Button, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {useDispatch} from 'react-redux';

@@ -1,4 +1,4 @@
-const ValidateInput = (value:any, rules:any) => {
+const validateInput = (value:any, rules:any) => {
     let warning = null;
     let checkedValue = value;
 
@@ -26,4 +26,4 @@ const ValidateInput = (value:any, rules:any) => {
     return warning;
 }
 
-export default ValidateInput;
+export default validateInput;

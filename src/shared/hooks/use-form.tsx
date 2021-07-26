@@ -1,9 +1,9 @@
 import { ChangeEvent, useReducer, useCallback, useRef, Fragment } from "react";
-import { TextField, Tooltip, Fab, Button, makeStyles } from "@material-ui/core";
+import { TextField, Tooltip, Fab, makeStyles } from "@material-ui/core";
 import { Face, Check } from "@material-ui/icons";
 
 import CustomButton from "../UIElements/Button";
-import ValidateInput from "../utils/ValidateInput";
+import validateInput from "../utils/validateInput";
 
 const DEFAULT_INPUTS = {
   email: {
@@ -120,11 +120,11 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
     ) => {
       dispatch({
         type: "VALIDATE_INPUT",
-        warning: ValidateInput(event.target.value, validators),
+        warning: validateInput(event.target.value, validators),
         id,
       });
     },
-    [ValidateInput, dispatch]
+    [dispatch]
   );
 
   const onPickFileHandler = () => {
