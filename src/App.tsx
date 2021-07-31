@@ -1,7 +1,18 @@
-import { Fragment, useEffect, useCallback, useState } from "react";
+import {
+  Fragment,
+  useEffect,
+  useCallback,
+  useState,
+  Suspense,
+  lazy,
+} from "react";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useJwt } from "react-jwt";
+import { CircularProgress } from "@material-ui/core";
+import { Redirect } from "react-router";
+
+import { RootState } from "./store/index";
 
 import Dialog from "./shared/UIElements/Dialog";
 import useHttp from "./shared/hooks/use-http";
@@ -9,16 +20,18 @@ import Notification from "./shared/UIElements/Notification";
 import { authActions } from "./store/authSlice";
 import { userActions } from "./store/userSlice";
 import { UIActions } from "./store/ui-slice";
+
 import Layout from "./shared/Layout/Layout";
-import DebateForm from "./DebateForm/page/NewDebate";
-import EditDebateForm from "./EditDebate/page/EditDebate";
 import Global from "./Global/page/Global";
-import UserDebates from "./UserDebates/page/UserDebates";
-import Observed from "./Observed/page/Observed";
-import Profile from "./Profile/page/Profile";
-import Auth from "./Auth/page/Auth";
 import Logout from "./Auth/page/Logout";
 import "./App.css";
+
+const DebateForm = lazy(() => import("./DebateForm/page/NewDebate"));
+const EditDebateForm = lazy(() => import("./EditDebate/page/EditDebate"));
+const Auth = lazy(() => import("./Auth/page/Auth"));
+const Profile = lazy(() => import("./Profile/page/Profile"));
+const UserDebates = lazy(() => import("./UserDebates/page/UserDebates"));
+const Observed = lazy(() => import("./Observed/page/Observed"));
 
 function App() {
   const dispatch = useDispatch();
@@ -29,14 +42,13 @@ function App() {
 
   const { isExpired, decodedToken } = useJwt(localStorage.getItem("jwt") || "");
 
-  const authState = useSelector((state: any) => state.auth);
+  const token = useSelector((state: RootState) => state.auth.token);
 
   const { message, type, open } = useSelector(
-    (state: any) => state.UI.notification
+    (state: RootState) => state.UI.notification
   );
 
   const closeDialog = useCallback(() => setDialog(false), []);
-
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -51,10 +63,9 @@ function App() {
             })
           );
           sendRequest(
-            `http://localhost:5000/api/users/user/${decodedToken.userId}`
+            `${process.env.REACT_APP_BACKEND_URL}/users/user/${decodedToken.userId}`
           )
-            .then((res: any) => {
-              console.log(res.data);
+            .then((res) => {
               dispatch(userActions.setUserData(res.data.user));
             })
             .catch((err) => {});
@@ -84,23 +95,27 @@ function App() {
     return () => {
       if (typeof timeout !== "undefined") clearTimeout(timeout);
     };
-  }, [decodedToken, isExpired]);
+  }, [decodedToken, isExpired, dispatch, sendRequest]);
 
   let routes = (
     <Switch>
-      <Route path="/auth">
-        <Auth />
+      <Route path="/debates/:uid">
+        <UserDebates />
       </Route>
       <Route path="/user/:uid">
         <Profile />
       </Route>
+      <Route path="/auth">
+        <Auth />
+      </Route>
       <Route path="/" exact>
         <Global />
       </Route>
+      <Redirect to="/" />
     </Switch>
   );
 
-  if (!!authState.token) {
+  if (token) {
     routes = (
       <Switch>
         <Route path="/new-debate">
@@ -124,6 +139,7 @@ function App() {
         <Route path="/" exact>
           <Global />
         </Route>
+        <Redirect to="/" />
       </Switch>
     );
   }
@@ -131,7 +147,15 @@ function App() {
   return (
     <Fragment>
       <Layout>
-        {routes}
+        <Suspense
+          fallback={
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <CircularProgress />
+            </div>
+          }
+        >
+          {routes}
+        </Suspense>
       </Layout>
       <Notification
         open={open}
@@ -139,7 +163,12 @@ function App() {
         type={type}
         onClose={() => dispatch(UIActions.closeNotifiaction())}
       />
-      <Dialog open={dialog} handleClose={closeDialog} title="This app is in early stage of development." description="Dear user, this application might be not perfect yet. I am working hard to add new features. Enjoy its current state :)" />
+      <Dialog
+        open={dialog}
+        handleClose={closeDialog}
+        title="This app is in early stage of development."
+        description="Dear user, this application might be not perfect yet. I am working hard to add new features. Enjoy its current state :)"
+      />
     </Fragment>
   );
 }

@@ -1,10 +1,10 @@
-import { Fragment } from "react";
 import { useParams } from "react-router";
-import {LinearProgress} from '@material-ui/core';
 
 import useDebates from "../../shared/hooks/use-debates";
 
-type Props = {};
+interface Props {
+  
+};
 
 const UserDebates = (props: Props) => {
   const params:any = useParams();

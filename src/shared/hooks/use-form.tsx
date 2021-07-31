@@ -35,11 +35,11 @@ const DEFAULT_INPUTS = {
   },
 };
 
-type action = {
+interface action {
   type: "SET_DATA" | "CHANGE_VALUE" | "VALIDATE_INPUT" | "SET_FORM_VALIDITY";
   data?: object;
-  id?: any;
-  val?: any;
+  id: any;
+  val: any;
   warning?: string;
 };
 
@@ -131,10 +131,8 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
       filePickerRef!.current!.click();
   };
 
-  const pickedHandler = (event:ChangeEvent<HTMLInputElement>, id:any) => {
+  const pickedHandler = (event:ChangeEvent<HTMLInputElement>, id:string) => {
     if(event.target.files && event.target.files.length === 1) {
-      console.log(event.target.files[0]);
-      console.log(formState.inputs[id]);
       setData({
         ...formState.inputs,
         [id]: {
@@ -180,7 +178,6 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
       }
     }
     dispatch({type: "SET_FORM_VALIDITY", val: true});
-    console.log("FORM IS VALID");
     onSubmitHandler();
   }
 

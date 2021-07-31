@@ -1,8 +1,9 @@
 import {useState} from 'react';
-import { Typography, Button, Switch, Grid } from "@material-ui/core";
+import { Typography, Switch, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {useDispatch} from 'react-redux';
 import { useHistory } from 'react-router';
+import { CircularProgress } from '@material-ui/core';
 
 import {authActions} from '../../store/authSlice';
 import { userActions } from '../../store/userSlice';
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 
-type props = {};
+interface props {};
 
 const Auth = (props: props) => {
   const classes = useStyles();
@@ -46,7 +47,7 @@ const Auth = (props: props) => {
   const dispatch = useDispatch();
 
   const { formState, displayForm, setData } = useForm(onSubmitHandler);
-  const { sendRequest, error, isLoading } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
   const [isLoggingIn, setIsLoggingIn] = useState(true);
 
     const onChangeModeHandler = () => {
@@ -103,14 +104,13 @@ const Auth = (props: props) => {
 
   function onSubmitHandler() {
     if(isLoggingIn) {
-        sendRequest('http://localhost:5000/api/users/login', {success: 'Logged in.', error: 'Could not log you in. Please, try again.'}, 'POST', {
+        sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/login`, {success: 'Logged in.', error: 'Could not log you in. Please, try again.'}, 'POST', {
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
         })
-        .then((response:any) => {
+        .then((response) => {
           const {user, token} = response?.data;
           const {userId} = user;
-          console.log(user);
           localStorage.setItem('jwt', token);
           localStorage.setItem('userId', user.userId);
           dispatch(authActions.login({token, userId}));
@@ -128,12 +128,10 @@ const Auth = (props: props) => {
       formData.append('password', formState.inputs.password.value);
       formData.append('avatar', formState.inputs.avatar.value);
 
-        sendRequest('http://localhost:5000/api/users/signup', {success: 'Signed up', error: 'Could not sign you up. Please, try again.'}, 'POST', formData,
+        sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/signup`, {success: 'Signed up', error: 'Could not sign you up. Please, try again.'}, 'POST', formData,
         )
-        .then((response:any) => {
-          if(response?.statusText === 'OK') {
-            onChangeModeHandler();
-          }
+        .then((response) => {
+          onChangeModeHandler();
         })
         .catch(err => {
           
@@ -142,6 +140,8 @@ const Auth = (props: props) => {
   }
 
   return (
+    <>
+      {isLoading && <div style={{width: '100%', textAlign: 'center'}}><CircularProgress /></div>}
       <Form headline={isLoggingIn ? 'Log in' : 'Sign up'} onSubmit={onSubmitHandler} additives={
         <Typography component="div">
         <Grid className={classes.switchGrid} component="label" container alignItems="center" spacing={1}>
@@ -155,6 +155,7 @@ const Auth = (props: props) => {
       }>
         {displayForm}
       </Form>
+    </>
   );
 };
 

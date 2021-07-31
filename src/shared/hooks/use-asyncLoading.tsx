@@ -4,7 +4,7 @@ import { CircularProgress } from "@material-ui/core";
 
 import useDebate from "../../shared/hooks/use-debate";
 
-type Props = {
+interface Props {
   step: number;
   url: string;
   auth: boolean;
@@ -17,11 +17,13 @@ const useAsyncLoading = (props: Props) => {
 
   const { ref: containerRef, inView } = useInView({ threshold: 0.1 });
 
+  const {auth, url} = props;
+
   useEffect(() => {
     if ((!inView || isBlocked) && !firstLoading) return;
         firstLoading = false;
-        getDebates(props.url, props.auth);
-  }, [inView, isBlocked, getDebates]);
+        getDebates(url, auth);
+  }, [inView, isBlocked, getDebates, url, auth]);
 
 
   const border = (!isBlocked || isLoading) && (

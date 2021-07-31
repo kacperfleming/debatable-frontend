@@ -8,7 +8,7 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
-type props = {
+interface Props {
     type?: 'error' | 'warning' | 'info' | 'success';
     message: string;
     open: boolean;
@@ -16,7 +16,7 @@ type props = {
     onClose: any;
 };
 
-const Notification = (props: props) => (
+const Notification = (props: Props) => (
     <Snackbar open={props.open} autoHideDuration={props.timer || 2000} onClose={props.onClose}>
         <Alert onClose={props.onClose} severity={props.type || 'info'}>
             {props.message}

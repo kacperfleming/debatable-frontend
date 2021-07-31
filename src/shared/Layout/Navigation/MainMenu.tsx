@@ -19,7 +19,7 @@ import NavigationList from "./NavigationList";
 import UserPanel from "../UserPanel/UserPanel";
 import SCSSClasses from "./MainMenu.module.scss";
 
-type Props = {};
+interface Props {};
 
 const useStyles = makeStyles({
   drawer: {

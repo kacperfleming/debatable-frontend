@@ -1,18 +1,31 @@
 import {useState, useCallback} from 'react';
 
+import { RootState } from '../../store';
+
 import useHttp from "./use-http";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { userActions } from "../../store/userSlice";
-import { SendRounded } from '@material-ui/icons';
+
+export interface Debate {
+  id: string;
+  title: string;
+  description: string;
+  created_at: number;
+  creator: string | object;
+  comments: string[] | [] | object[];
+  likes: string[];
+  dislikes: string[];
+
+}
 
 const useDebate = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
     const {sendRequest, isLoading} = useHttp();
-    const auth = useSelector((state:any) => state.auth);
+    const auth = useSelector((state:RootState) => state.auth);
     const [pagination, setPagination] = useState(0);
 
     const [isBlocked, setIsBlocked] = useState(false);
@@ -21,11 +34,11 @@ const useDebate = () => {
 
     const deleteDebate = useCallback((id: string) => {
         if(isLoading) return;
-        sendRequest(`http://localhost:5000/api/debates/${id}`, {success: 'Debate deleted successfully.', error: 'Deleting debate failed. Please, try again.'}, 'DELETE', {}, {
+        sendRequest(`${process.env.REACT_APP_BACKEND_URL}/debates/${id}`, {success: 'Debate deleted successfully.', error: 'Deleting debate failed. Please, try again.'}, 'DELETE', {}, {
             'Authorization': `Bearer ${auth.token}`
         })
-            .then((result:any) => {
-              setData((prev:any) => prev.filter((debate:any) => debate.id !== id));
+            .then((response) => {
+              setData((prev:Array<object>) => prev.filter((debate:any) => debate.id !== id));
             })
             .catch(err => {
 
@@ -34,7 +47,7 @@ const useDebate = () => {
 
     const addDebate = useCallback((debate:any) => {
         sendRequest(
-            "http://localhost:5000/api/debates", {success: 'Yay! Your debate is waiting for people.', error: 'Could not create your debate :(. Please, try again.'},
+            `${process.env.REACT_APP_BACKEND_URL}/debates`, {success: 'Yay! Your debate is waiting for people.', error: 'Could not create your debate :(. Please, try again.'},
             "POST",
             {
               title: debate.title,
@@ -43,7 +56,7 @@ const useDebate = () => {
             {
               "Authorization": `Bearer ${auth.token}`,
             }
-          ).then((response:any) => {
+          ).then((response) => {
 
             history.push('/');
           })
@@ -55,12 +68,10 @@ const useDebate = () => {
     const getDebates = useCallback((url, authOnly) => {
       if(isBlocked || isLoading) return;
         const header = authOnly ? {'Authorization': `Bearer ${auth.token}`} : {};
-        console.log(`http://localhost:5000/api/${url}/${pagination}`);
         setIsBlocked(true);
-        sendRequest(`http://localhost:5000/api/${url}/${pagination}`, {
+        sendRequest(`${process.env.REACT_APP_BACKEND_URL}/${url}/${pagination}`, {
             error: "Could not get debates.",
-          }, 'GET', {}, header).then((response: any) => {
-            console.log(response.data);
+          }, 'GET', {}, header).then((response) => {
             if (!!response.data[0]) {
               setPagination(prev => +prev + 5);
               setData((prev:any) => prev.concat(response.data));
@@ -76,9 +87,9 @@ const useDebate = () => {
 
     const toggleObserv = useCallback((debateId:string) => {
       console.log(debateId);
-      sendRequest(`http://localhost:5000/api/users/favorite/${debateId}`, {
+      sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/favorite/${debateId}`, {
         
-      }, 'POST', { debateId }, {"Authorization": `Bearer ${auth.token}`}).then((response: any) => {
+      }, 'POST', { debateId }, {"Authorization": `Bearer ${auth.token}`}).then((response) => {
         if(response.data.add) {
           dispatch(userActions.addFavorite(debateId));
         } else {
@@ -92,9 +103,9 @@ const useDebate = () => {
 
     const getDebateById = useCallback((id:string) => {
       setIsBlocked(true);
-      sendRequest(`http://localhost:5000/api/debates/debate/${id}`, {
+      sendRequest(`${process.env.REACT_APP_BACKEND_URL}/debates/debate/${id}`, {
         error: "Could not get debate with provided id.",
-      }).then((response: any) => {
+      }).then((response) => {
         setData(response.data.debate);
       })
       .catch(err => {
@@ -103,13 +114,13 @@ const useDebate = () => {
     }, [sendRequest]);
 
     const editDebate = useCallback((id:string, description:string) => {
-      sendRequest(`http://localhost:5000/api/debates/${id}`, {
+      sendRequest(`${process.env.REACT_APP_BACKEND_URL}/debates/${id}`, {
         error: "Could not get debate with provided id.",
       }, 'PATCH', {
         description
       }, {
         'Authorization': `Bearer ${auth.token}`
-      }).then((response: any) => {
+      }).then((response) => {
         setData(response.data.debate);
       })
       .catch(err => {
@@ -118,20 +129,22 @@ const useDebate = () => {
     }, [auth.token, sendRequest]);
 
     const voteInDebate = useCallback((debateId:string, option: boolean) => {
-          sendRequest(`http://localhost:5000/api/debates/vote/${debateId}`, {
+          sendRequest(`${process.env.REACT_APP_BACKEND_URL}/debates/vote/${debateId}`, {
             success: 'Your voice matters. Thanks for voting!',
             error: "Could not vote. Please, try again later.",
           }, 'POST', {option}, {
               'Authorization': `Bearer ${auth.token}`
-          }).then((response: any) => {
-              setData((prev:any) => {
+          }).then((response) => {
+              setData((prev: Debate[] | []) => {
                 const state = prev;
                 const index = prev.findIndex((debate:any) => debate.id === debateId);
                 const updatedDebate = prev[index];
-                if(option) {
-                  updatedDebate.likes.push(auth.userId)
-                } else {
-                  updatedDebate.dislikes.push(auth.userId)
+                if(auth.userId) {
+                  if(option) {
+                    updatedDebate.likes.push(auth.userId)
+                  } else {
+                    updatedDebate.dislikes.push(auth.userId)
+                  }
                 }
                 state[index] = updatedDebate;
                 return state;

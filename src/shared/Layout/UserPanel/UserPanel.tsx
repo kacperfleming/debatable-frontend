@@ -11,15 +11,17 @@ import { Person, Forum, Bookmark } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import { RootState } from "../../../store";
+
 import classes from "./UserPanel.module.scss";
 
-type Props = {
+interface Props {
   desktopOnly?: boolean;
 };
 
 const UserPanel = (props: Props) => {
 
-  const userId = useSelector((state:any) => state.auth.userId);
+  const userId = useSelector((state:RootState) => state.auth.userId);
 
   const userPanelItems = [
     {

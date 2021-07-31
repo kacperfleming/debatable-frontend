@@ -4,14 +4,13 @@ import useHttp from "./use-http";
 
 const useUser = () => {
 
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
 
   const [user, setUser] = useState<any>();
 
 
   const getUser = useCallback((userId:string) => {
-    console.log(userId);
-    sendRequest(`http://localhost:5000/api/users/user/${userId}`)
+    sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/user/${userId}`)
       .then((response: any) => {
         setUser(response.data.user);
       })
@@ -22,7 +21,8 @@ const useUser = () => {
 
   return {
     getUser,
-    user
+    user,
+    isLoading
   };
 };
 

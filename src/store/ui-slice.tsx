@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type state = {
+export interface UIState {
     notification: {
         open: boolean;
-        message: string | null;
-        type: null | 'error' | 'warning' | 'info' | 'success' 
+        message: string;
+        type?: 'error' | 'warning' | 'info' | 'success' 
     };
     isLoading: boolean;
     entryInfoAccepted: boolean;
 }
 
-const initialState:state = {
+const initialState:UIState = {
   notification: {
     open: false,
-    message: null,
-    type: null,
+    message: '',
+    type: undefined,
   },
   isLoading: false,
   entryInfoAccepted: false
@@ -24,23 +24,23 @@ const UISlice = createSlice({
   name: "UISlice",
   initialState,
   reducers: {
-    setLoading(state:state, action) {
+    setLoading(state:UIState, action) {
       state.isLoading = action.payload;
     },
-    setNotification(state:state, action) {
+    setNotification(state:UIState, action) {
       state.notification = {
         open: true,
         message: action.payload.message,
         type: action.payload.type,
       };
     },
-    closeNotifiaction(state:state) {
+    closeNotifiaction(state:UIState) {
       state.notification = {
         ...state.notification,
         open: false,
       };
     },
-    acceptEntryInfo(state:state) {
+    acceptEntryInfo(state:UIState) {
       state.entryInfoAccepted = true
     }
   },

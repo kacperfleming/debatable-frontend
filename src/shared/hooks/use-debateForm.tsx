@@ -2,6 +2,8 @@ import { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 
+import { Debate } from "../../shared/hooks/use-debate";
+
 import useDebate from "../../shared/hooks/use-debate";
 import useForm from "../../shared/hooks/use-form";
 import Form from "../../shared/UIElements/Form";
@@ -11,7 +13,7 @@ type auth = {
 };
 
 type debates = {
-  debates?: [any];
+  debates?: Debate[];
 };
 
 interface reduxState {
@@ -60,18 +62,20 @@ const useDebateForm = () => {
         },
       },
     });
-  }, [setData, debate, params.did]);
+  }, [setData, debate, params.did, getDebateById, isBlocked]);
 
   function onSubmitHandler() {
     !!params.did ? editDebate(params.did, formState.inputs.description.value) : addDebate({title: formState.inputs.title.value, description: formState.inputs.description.value})
   }
 
   return (
+    <>
     <Fragment>
       <Form headline="New Debate" onSubmit={onSubmitHandler}>
         {displayForm}
       </Form>
     </Fragment>
+    </>
   );
 };
 

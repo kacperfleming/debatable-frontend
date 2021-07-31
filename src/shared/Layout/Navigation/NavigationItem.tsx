@@ -3,7 +3,7 @@ import { Tooltip, Fab } from "@material-ui/core";
 
 import classes from "./NavigationItem.module.scss";
 
-type Props = {
+interface Props {
   to: string;
   exact: boolean;
   icon?: JSX.Element;

@@ -5,7 +5,7 @@ import ReputationRankPanel from "./ReputationRankPanel/ReputationRankPanel";
 import MainMenu from "./Navigation/MainMenu";
 import classes from "./Layout.module.scss";
 
-type Props = {
+interface Props {
   children: ReactElement;
 };
 

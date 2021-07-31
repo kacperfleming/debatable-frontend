@@ -5,7 +5,7 @@ import { Box, List, ListItem, makeStyles } from "@material-ui/core";
 import useHttp from "../../hooks/use-http";
 import Author from "./Author";
 
-type Props = {
+interface Props {
 
 };
 
@@ -51,19 +51,18 @@ const useStyles = makeStyles((theme) => ({
 const ReputationRankPanel = (props: Props) => {
   const styles = useStyles(props);
 
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
 
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    if (users.length > 0) return;
-    sendRequest("http://localhost:5000/api/users/rank")
+    if (users.length > 0 || isLoading) return;
+    sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/rank`)
       .then((response: any) => {
-        console.log(response);
         setUsers(response.data.users);
       })
       .catch((err) => {});
-  }, [sendRequest, users]);
+  }, [sendRequest, users, isLoading]);
 
   return (
     <Box className={styles.reputationRankPanel} component="section">

@@ -1,6 +1,6 @@
 import useDebates from "../../shared/hooks/use-debates";
 
-type Props = {
+interface Props {
 
 };
 

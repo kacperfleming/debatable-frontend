@@ -4,7 +4,7 @@ import {CSSProperties} from 'react';
 
 import classes from "./Author.module.scss";
 
-type Props = {
+interface Props {
   name: string;
   additionalData?: string;
   avatar: string;
@@ -34,7 +34,7 @@ const Author = (props: Props) => {
             ref={imageRef}
             className={classes.Avatar}
             alt="Avatar"
-            src={`http://localhost:5000/${props.avatar}` || ''}
+            src={`${process.env.REACT_APP_STATIC}/${props.avatar}` || ''}
           >
             {avatar}
           </Avatar>

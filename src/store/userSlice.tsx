@@ -1,21 +1,22 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-interface state {
-    username: string | null;
-    email: string | null;
+
+export interface UserState {
+    username?: string;
+    email?: string;
     likes: string[];
     dislikes: string[];
-    avatar: string | null;
+    avatar?: string;
     reputation: number;
     observed: string[];
 }
 
-const initialState:state = {
-    username: null,
-    email: null,
+const initialState:UserState = {
+    username: undefined,
+    email: undefined,
     likes: [],
     dislikes: [],
-    avatar: null,
+    avatar: undefined,
     reputation: 0,
     observed: [],
 }
@@ -24,7 +25,7 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUserData(state:state, action) {
+        setUserData(state:UserState, action) {
             state.username = action.payload.username;
             state.email = action.payload.email;
             state.avatar = action.payload.avatar;
@@ -33,16 +34,16 @@ const userSlice = createSlice({
             state.likes = action.payload.likes;
             state.dislikes = action.payload.dislikes;
         },
-        clearUser(state:state) {
+        clearUser(state:UserState) {
             state = initialState;
         },
-        addFavorite(state:state, action) {
+        addFavorite(state:UserState, action) {
             state.observed = state.observed.concat(action.payload)
         },
-        removeFavorite(state:state, action) {
+        removeFavorite(state:UserState, action) {
             state.observed = state.observed.filter((d:string) => d !== action.payload)
         },
-        manageReputation(state:state, action) {
+        manageReputation(state:UserState, action) {
             state.reputation = state.reputation + action.payload
         }
     }

@@ -24,22 +24,22 @@ import {
   Delete,
 } from "@material-ui/icons";
 import clsx from "clsx";
+import {Link} from 'react-router-dom';
 
-type Props = {
+interface Props {
   title: string;
   description?: string;
   author: string;
   authorId: string;
   avatar: string;
   created_at: number;
-  ref?: any;
   id: string;
   likes: number;
   dislikes: number;
 
   voted: false | 'liked' | 'disliked';
-  userId: string;
-  observed: boolean;
+  userId?: string;
+  observed?: boolean;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
   onVote: (id: string, option: boolean) => void;
@@ -100,20 +100,20 @@ const DebateDemo = (props: Props) => {
 
   const date = new Date(props.created_at);
 
-  console.log(props.voted);
-
   return (
     <List className={styles.root}>
       <Card className={styles.card}>
         <CardHeader
           avatar={
-            <Avatar
-              src={`http://localhost:5000/${props.avatar}` || ""}
-              aria-label="user avatar"
-              className={styles.avatar}
-            >
-              {props.author[0].toLocaleUpperCase()}
-            </Avatar>
+            <Link to={`/user/${props.authorId}`} style={{textDecoration: 'none', color: 'inherit'}}>
+              <Avatar
+                src={`${process.env.REACT_APP_STATIC}/${props.avatar}` || ""}
+                aria-label="user avatar"
+                className={styles.avatar}
+              >
+                {props.author[0].toLocaleUpperCase()}
+              </Avatar>
+            </Link>
           }
           action={
             props.userId && (
@@ -127,7 +127,7 @@ const DebateDemo = (props: Props) => {
               </Tooltip>
             )
           }
-          title={props.author}
+          title={<Link to={`/user/${props.authorId}`} style={{textDecoration: 'none', color: 'inherit'}}>{props.author}</Link>}
           subheader={`${String(date.getDate()).padStart(2, "0")}/${String(
             date.getMonth() + 1
           ).padStart(2, "0")}/${String(date.getFullYear())}`}
@@ -158,7 +158,7 @@ const DebateDemo = (props: Props) => {
               </IconButton>
             </Badge>
           </Box>
-          {(props.description || props.userId == props.authorId) && (
+          {(props.description || props.userId === props.authorId) && (
             <Box className={styles.controlls}>
               {props.authorId === props.userId && (
                 <>

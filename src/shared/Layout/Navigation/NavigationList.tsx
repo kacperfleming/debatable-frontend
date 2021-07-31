@@ -1,19 +1,19 @@
-import React from "react";
 import {useSelector} from 'react-redux';
-import {DefaultRootState} from 'react-redux';
+
+import { RootState } from '../../../store';
 
 import NavigationItem from "./NavigationItem";
 import { List } from "@material-ui/core";
-import { Public, AddCircle, Forum, VpnKey, ExitToApp } from "@material-ui/icons";
+import { Public, AddCircle, VpnKey, ExitToApp } from "@material-ui/icons";
 
 import classes from "./NavigationList.module.scss";
 
-type Props = {
+interface Props {
 
 };
 
 const NavigationList = (props: Props) => {
-  const auth = useSelector((state:any) => state.auth);
+  const auth = useSelector((state:RootState) => state.auth);
 
 
   let links = [

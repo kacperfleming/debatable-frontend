@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
+import { RootState } from "../../store";
+
 import DebateDemo from "../components/DebateDemo/DebateDemo";
 import useAsyncLoading from "./use-asyncLoading";
 
@@ -9,9 +11,9 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
 
     const { data:debates, border, voteInDebate, deleteDebate, toggleObserv } = useAsyncLoading({ step: 5, url, auth});
   
-    const userId = useSelector((state: any) => state.auth.userId);
+    const userId = useSelector((state: RootState) => state.auth.userId);
   
-    const observed = useSelector((state: any) => state.user.observed);
+    const observed = useSelector((state: RootState) => state.user.observed);
   
     const deleteDebateHandler = (id:string) => deleteDebate(id);
   
@@ -20,8 +22,6 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
     const voteHandler = (id:string, option: boolean) => voteInDebate(id, option);
   
     const toggleObservHandler = (id:string) => toggleObserv(id);
-
-    if(debates[0]) console.log(debates.forEach((el:any) => console.log(el.likes)));
 
     return (
         <>
@@ -40,7 +40,7 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
                 dislikes={el.dislikes.length}
 
                 userId={userId}
-                observed={observed.find((id:string) => id === el.id)}
+                observed={!!observed.find((id:string) => id === el.id)}
                 voted={((el.likes.find((user:any) => user === userId) && 'liked') || (el.dislikes.find((user:any) => user === userId) && 'disliked'))}
                 onDelete={(id:string) => deleteDebateHandler(id)}
                 onEdit={(id:string) => editDebateHandler(id)}

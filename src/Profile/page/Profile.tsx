@@ -32,28 +32,29 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-type Props = {
+interface Props {
 
 }
 
-const Profile = () => {
+const Profile = (props: Props) => {
     const styles = useStyles();
     const {getUser, user} = useUser();
-    const params:any = useParams();
+    const params:{uid:string} = useParams();
 
     const {uid} = params;
     useEffect(() => {
+        if(user) return;
         getUser(uid);
-    }, [uid]);
+    }, [uid, getUser, user]);
 
-    let date:any;
+    let date: Date | undefined;
     if(user && user.date_of_joining) date = new Date(user.date_of_joining);
 
     return (
         <Box className={styles.root} style={{background: 'inherit'}}>
             {user ? (
                 <Box className={styles.header}>  
-                    <Avatar className={styles.avatar} src={`http://localhost:5000/${user.avatar}`}>{user.username.slice(0, 1).toUpperCase}</Avatar>
+                    <Avatar className={styles.avatar} src={`${process.env.REACT_APP_STATIC}/${user.avatar}`}>{user.username[0].toUpperCase}</Avatar>
                     <Typography style={{fontWeight: 'bolder', marginBottom: 10}} color="textPrimary" component="h1" variant="h4">{user.username}</Typography>
                     <Typography paragraph>Reputation: {user.reputation}</Typography>
                     <Typography paragraph>Debates: {user.debates.length > 0 ? <Link style={{textDecoration: 'none', color: blue[600]}} to={`/debates/${params.uid}`}>{user.debates.length}</Link> : 0}</Typography>

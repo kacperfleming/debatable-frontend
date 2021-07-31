@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   },
 });
 
-type props = {
+interface Props {
   headline: string;
   onSubmit: () => void;
   children: JSX.Element[] | JSX.Element;
@@ -39,7 +39,7 @@ type props = {
   buttonStyles?: string;
 };
 
-const Form = (props: props) => {
+const Form = (props: Props) => {
   const classes = useStyles();
 
   return (
