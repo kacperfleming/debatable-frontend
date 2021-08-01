@@ -6,8 +6,6 @@ const Observed = (props: Props) => {
 
   const debates = useDebates({url: "users/observed", auth: true});
 
-
-
   return debates;
 };
 

@@ -35,15 +35,26 @@ const DEFAULT_INPUTS = {
   },
 };
 
-interface action {
+interface Action {
   type: "SET_DATA" | "CHANGE_VALUE" | "VALIDATE_INPUT" | "SET_FORM_VALIDITY";
   data?: object;
-  id: any;
-  val: any;
-  warning?: string;
+  id?: string;
+  val?: any;
+  warning?: string | null;
 };
 
-const formReducer = (state: any, action: action) => {
+interface Inputs {
+    [key:string]: {
+      [key:string]: any;
+    };
+}
+
+interface State {
+  inputs: Inputs;
+  formIsValid: boolean;
+}
+
+const formReducer = (state: State, action: Action) => {
   switch (action.type) {
     case "SET_DATA":
       return {
@@ -57,8 +68,8 @@ const formReducer = (state: any, action: action) => {
         ...state,
         inputs: {
           ...state.inputs,
-          [action.id]: {
-            ...state.inputs[action.id],
+          [action.id as keyof object]: {
+            ...state.inputs[action.id as keyof object],
             value: action.val,
           },
         },
@@ -68,8 +79,8 @@ const formReducer = (state: any, action: action) => {
         ...state,
         inputs: {
           ...state.inputs,
-          [action.id]: {
-            ...state.inputs[action.id],
+          [action.id as keyof object]: {
+            ...state.inputs[action.id as keyof object],
             warning: action.warning,
           },
         },
@@ -92,12 +103,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, buttonText?:string, buttonStyles?:string) => {
+const useForm = (onSubmitHandler: () => void, inputs: Inputs = DEFAULT_INPUTS, buttonText?:string, buttonStyles?:string) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
 
   const styles = useStyles();
 
-  const [formState, dispatch]: [any, any] = useReducer(formReducer, {
+  const [formState, dispatch] = useReducer(formReducer, {
     inputs: { ...inputs },
     formIsValid: false,
   });
@@ -116,7 +127,7 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
     (
       event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       id: string,
-      validators: object
+      validators: {[key:string]: string | number}
     ) => {
       dispatch({
         type: "VALIDATE_INPUT",
@@ -146,7 +157,7 @@ const useForm = (onSubmitHandler: () => void, inputs: object = DEFAULT_INPUTS, b
     setData({
       ...formState.inputs,
       [id]: {
-        ...formState.intpus[id],
+        ...formState.inputs[id],
         value: '',
         isValid: false
       }

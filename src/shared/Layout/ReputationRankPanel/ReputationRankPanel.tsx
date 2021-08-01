@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box, List, ListItem, makeStyles } from "@material-ui/core";
 
+import { UserState } from "../../../store/userSlice";
 import useHttp from "../../hooks/use-http";
 import Author from "./Author";
 
@@ -53,12 +54,12 @@ const ReputationRankPanel = (props: Props) => {
 
   const { sendRequest, isLoading } = useHttp();
 
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<UserState[]>([]);
 
   useEffect(() => {
     if (users.length > 0 || isLoading) return;
     sendRequest(`${process.env.REACT_APP_BACKEND_URL}/users/rank`)
-      .then((response: any) => {
+      .then((response) => {
         setUsers(response.data.users);
       })
       .catch((err) => {});
@@ -68,12 +69,12 @@ const ReputationRankPanel = (props: Props) => {
     <Box className={styles.reputationRankPanel} component="section">
       <List className={styles.list}>
         {users.length > 0 &&
-          users.map((user: any) => (
+          users.map((user:UserState) => (
             <Link key={user.id} className={styles.link} to={`/user/${user.id}`}>
               <ListItem>
                 <Author
-                  name={user.username}
-                  avatar={user.avatar}
+                  name={user.username!}
+                  avatar={user.avatar!}
                   additionalData={`Reputation: ${user.reputation}`}
                   style={{ fontSize: "0.75rem" }}
                 />

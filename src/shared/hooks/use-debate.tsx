@@ -6,18 +6,29 @@ import useHttp from "./use-http";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
+import { UserState } from '../../store/userSlice';
 import { userActions } from "../../store/userSlice";
+
+// export interface Creator {
+//   id: string;
+//   email: string;
+//   username: string;
+//   date_of_joining: number;
+//   avatar: string;
+//   reputation: number;
+//   debates: string[] | Debate[];
+//   observed: string[] | Debate[];
+// }
 
 export interface Debate {
   id: string;
   title: string;
   description: string;
   created_at: number;
-  creator: string | object;
-  comments: string[] | [] | object[];
+  creator: string | UserState;
+  comments: object[];
   likes: string[];
   dislikes: string[];
-
 }
 
 const useDebate = () => {
@@ -30,7 +41,7 @@ const useDebate = () => {
 
     const [isBlocked, setIsBlocked] = useState(false);
 
-    const [data, setData] = useState<any>([]);
+    const [data, setData] = useState<Debate[]>([]);
 
     const deleteDebate = useCallback((id: string) => {
         if(isLoading) return;
@@ -38,7 +49,7 @@ const useDebate = () => {
             'Authorization': `Bearer ${auth.token}`
         })
             .then((response) => {
-              setData((prev:Array<object>) => prev.filter((debate:any) => debate.id !== id));
+              setData((prev:Debate[]) => prev.filter((debate:Debate) => debate.id !== id));
             })
             .catch(err => {
 
@@ -106,7 +117,7 @@ const useDebate = () => {
       sendRequest(`${process.env.REACT_APP_BACKEND_URL}/debates/debate/${id}`, {
         error: "Could not get debate with provided id.",
       }).then((response) => {
-        setData(response.data.debate);
+        setData([response.data.debate]);
       })
       .catch(err => {
 

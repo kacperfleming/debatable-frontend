@@ -13,7 +13,7 @@ interface Props {
     message: string;
     open: boolean;
     timer?: number;
-    onClose: any;
+    onClose(): void;
 };
 
 const Notification = (props: Props) => (

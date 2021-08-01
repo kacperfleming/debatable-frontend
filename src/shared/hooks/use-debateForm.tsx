@@ -2,44 +2,33 @@ import { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 
-import { Debate } from "../../shared/hooks/use-debate";
+import { RootState } from "../../store";
 
 import useDebate from "../../shared/hooks/use-debate";
 import useForm from "../../shared/hooks/use-form";
 import Form from "../../shared/UIElements/Form";
 
-type auth = {
-  userId?: string;
-};
-
-type debates = {
-  debates?: Debate[];
-};
-
-interface reduxState {
-  auth: auth;
-  debates: debates;
-}
 
 const useDebateForm = () => {
-  const {addDebate, getDebateById, editDebate, data:debate, isBlocked} = useDebate();
-  const userId = useSelector((state: reduxState) => state.auth.userId);
+  const {addDebate, getDebateById, editDebate, data:debates, isBlocked} = useDebate();
+
+  const userId = useSelector((state: RootState) => state.auth.userId);
 
   const history = useHistory();
   const params:{did?:string} = useParams();
 
   const { formState, displayForm, setData } = useForm(onSubmitHandler);
 
-  if(params.did && debate.length > 0 && (userId !== debate.creator)) history.goBack();
+  if(params.did && debates.length > 0 && (userId !== debates[0].creator)) history.goBack();
 
   useEffect(() => {
     !!params.did && !isBlocked && getDebateById(params.did);
-    if(params.did && debate.length < 1) return;
+    if(params.did && debates.length < 1) return;
     setData({
       title: {
         elementType: "input",
         inputType: "text",
-        value: debate ? debate.title : '',
+        value: debates[0] ? debates[0].title : '',
         label: "title",
         required: true,
         disabled: !!params.did,
@@ -53,7 +42,7 @@ const useDebateForm = () => {
         elementType: "textarea",
         rows: 8,
         rowsMax: 8,
-        value: debate ? debate.description : '',
+        value: debates[0] ? debates[0].description : '',
         label: "description",
         required: false,
         warning: "",
@@ -62,7 +51,7 @@ const useDebateForm = () => {
         },
       },
     });
-  }, [setData, debate, params.did, getDebateById, isBlocked]);
+  }, [setData, debates, params.did, getDebateById, isBlocked]);
 
   function onSubmitHandler() {
     !!params.did ? editDebate(params.did, formState.inputs.description.value) : addDebate({title: formState.inputs.title.value, description: formState.inputs.description.value})

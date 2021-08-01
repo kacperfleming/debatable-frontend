@@ -1,6 +1,8 @@
 import { Button, styled } from "@material-ui/core";
 import { blue, pink } from "@material-ui/core/colors";
 
+
+
 const StyledButton = styled(Button)({
 
     backgroundSize: "180%",
@@ -18,7 +20,13 @@ const StyledButton = styled(Button)({
     },
 });
 
-const CustomButton = (props:any) => (
+interface Props {
+  onClick(): void;
+  children: string | number;
+  className?: string;
+}
+
+const CustomButton = (props:Props) => (
   <StyledButton {...props}>{props.children}</StyledButton>
 );
 

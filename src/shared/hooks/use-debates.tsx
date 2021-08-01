@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
+import { UserState } from "../../store/userSlice";
+import { Debate} from "./use-debate";
 import { RootState } from "../../store";
 
 import DebateDemo from "../components/DebateDemo/DebateDemo";
@@ -10,7 +12,7 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
     const history = useHistory();
 
     const { data:debates, border, voteInDebate, deleteDebate, toggleObserv } = useAsyncLoading({ step: 5, url, auth});
-  
+
     const userId = useSelector((state: RootState) => state.auth.userId);
   
     const observed = useSelector((state: RootState) => state.user.observed);
@@ -26,22 +28,22 @@ const useDebates = ({url, auth}:{url:string, auth:boolean}) => {
     return (
         <>
           {debates.length > 0 &&
-            debates.map((el: any) => (
+            debates.map((el: Debate) => (
               <DebateDemo
                 key={el.id}
                 id={el.id}
                 description={el.description}
                 title={el.title}
                 created_at={el.created_at}
-                authorId={el.creator.id}
-                author={el.creator.username}
-                avatar={el.creator.avatar}
+                authorId={(el.creator as UserState).id!}
+                author={(el.creator as UserState).username!}
+                avatar={(el.creator as UserState).avatar!}
                 likes={el.likes.length}
                 dislikes={el.dislikes.length}
 
                 userId={userId}
                 observed={!!observed.find((id:string) => id === el.id)}
-                voted={((el.likes.find((user:any) => user === userId) && 'liked') || (el.dislikes.find((user:any) => user === userId) && 'disliked'))}
+                voted={((el.likes.find((user:any) => user === userId) && 'liked') || (el.dislikes.find((user:any) => user === userId) && 'disliked') || false)}
                 onDelete={(id:string) => deleteDebateHandler(id)}
                 onEdit={(id:string) => editDebateHandler(id)}
                 onVote={(id:string, option:boolean) => voteHandler(id, option)}

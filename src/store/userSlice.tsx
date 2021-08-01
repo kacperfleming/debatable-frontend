@@ -1,21 +1,26 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-
 export interface UserState {
+    id?: string;
     username?: string;
     email?: string;
+    date_of_joining?: number;
     likes: string[];
     dislikes: string[];
+    debates: string[];
     avatar?: string;
     reputation: number;
     observed: string[];
 }
 
 const initialState:UserState = {
+    id: undefined,
     username: undefined,
     email: undefined,
+    date_of_joining: undefined,
     likes: [],
     dislikes: [],
+    debates: [],
     avatar: undefined,
     reputation: 0,
     observed: [],

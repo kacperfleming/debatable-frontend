@@ -7,7 +7,7 @@ interface Props {
 };
 
 const UserDebates = (props: Props) => {
-  const params:any = useParams();
+  const params:{uid?: string} = useParams();
   const debates = useDebates({url: `debates/user/${params.uid}`, auth: false});
 
   return debates;
